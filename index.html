@@ -17,6 +17,7 @@
                 <div class="welcome-content">
                     <p>This guided process will help build a digital brain based on your life experiences, personality, and values.</p>
                     <p><strong>Time required:</strong> 30-45 minutes</p>
+                    <p><strong>Questions:</strong> 47 comprehensive questions about your life and personality</p>
                     <button id="start-btn" class="btn-primary">Begin Creation</button>
                 </div>
             </div>
@@ -25,20 +26,34 @@
         <!-- Questionnaire Screen -->
         <div id="questionnaire-screen" class="screen">
             <div class="container">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">0% Complete</div>
                 </div>
                 
                 <div class="question-section">
-                    <h2 id="section-title">Developmental History</h2>
+                    <div class="section-header">
+                        <h2 id="section-title">Section Title</h2>
+                        <p id="section-description" class="section-description"></p>
+                    </div>
+                    
                     <div id="question-container">
                         <!-- Questions will be injected here -->
                     </div>
                 </div>
 
                 <div class="navigation">
-                    <button id="prev-btn" class="btn-secondary">Previous</button>
-                    <button id="next-btn" class="btn-primary">Next</button>
+                    <button id="prev-btn" class="btn-secondary">
+                        <span class="nav-icon">←</span> Previous
+                    </button>
+                    <div class="section-info">
+                        Section <span id="current-section">1</span> of <span id="total-sections">5</span>
+                    </div>
+                    <button id="next-btn" class="btn-primary">
+                        Next <span class="nav-icon">→</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -52,20 +67,18 @@
                         <span class="step-icon">🧠</span>
                         <span class="step-text">Analyzing responses...</span>
                     </div>
-                    <div class="analysis-step">
-                        <span class="step-icon">📊</span>
-                        <span class="step-text">Mapping neural pathways...</span>
+                </div>
+                
+                <div id="brain-construction">
+                    <div class="brain-stats">
+                        <div class="stat">Nodes: <span id="node-count">0</span></div>
+                        <div class="stat">Connections: <span id="connection-count">0</span></div>
+                        <div class="stat">Principles: <span id="principle-count">0</span></div>
                     </div>
-                    <div class="analysis-step">
-                        <span class="step-icon">⚖️</span>
-                        <span class="step-text">Building moral framework...</span>
-                    </div>
-                    <div class="analysis-step">
-                        <span class="step-icon">🎭</span>
-                        <span class="step-text">Configuring personality...</span>
+                    <div id="neural-preview">
+                        <canvas id="brain-canvas" width="400" height="300"></canvas>
                     </div>
                 </div>
-                <div id="brain-preview"></div>
             </div>
         </div>
 
@@ -85,25 +98,12 @@
         </div>
     </div>
 
-    <div id="brain-construction">
-            <div class="brain-stats">
-                <div class="stat">Nodes: <span id="node-count">0</span></div>
-                <div class="stat">Connections: <span id="connection-count">0</span></div>
-                <div class="stat">Principles: <span id="principle-count">0</span></div>
-            </div>
-            <div id="neural-preview">
-                <canvas id="brain-canvas" width="400" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <script src="js/app.js"></script>
     <script src="js/questionnaire-engine.js"></script>
     <script src="js/personality-analyzer.js"></script>
     <script src="js/brain-generator.js"></script>
-    <script src="js/exporter.js"></script>   
+    <script src="js/exporter.js"></script>
     <script src="js/utils/neural-helpers.js"></script>
     <script src="js/utils/validation.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
