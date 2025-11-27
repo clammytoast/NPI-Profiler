@@ -148,10 +148,29 @@ class NPIProfilerApp {
     }
 
     async generateNPIBrain() {
-        const responses = this.questionnaire.getAllResponses();
-        const personalityProfile = this.analyzer.analyzeResponses(responses);
-        this.npiBrain = this.brainGenerator.generateBrain(personalityProfile, responses);
-    }
+    const responses = this.questionnaire.getAllResponses();
+    const personalityProfile = this.analyzer.analyzeResponses(responses);
+    
+    // Initialize the brain generator
+    this.brainGenerator = new NPIBrainGenerator();
+    
+    // Generate the complete NPI brain
+    this.npiBrain = this.brainGenerator.generateBrain(personalityProfile, responses);
+    
+    // Update UI to show brain generation progress
+    this.updateAnalysisProgress("Brain architecture complete");
+}
+    
+    updateAnalysisProgress(message) {
+    const progressContainer = document.getElementById('analysis-progress');
+    const newStep = document.createElement('div');
+    newStep.className = 'analysis-step';
+    newStep.innerHTML = `
+        <span class="step-icon">✅</span>
+        <span class="step-text">${message}</span>
+    `;
+    progressContainer.appendChild(newStep);
+}
 
     renderNPISummary() {
         const statsContainer = document.getElementById('npi-stats');
