@@ -9,66 +9,56 @@ class NPIQuestionnaire {
     }
 
     async loadQuestionnaireData() {
-        // Your questionnaire structure
+        try {
+            // Load from external JSON file
+            const response = await fetch('data/questions.json');
+            const data = await response.json();
+            this.sections = data.sections;
+        } catch (error) {
+            console.error('Failed to load questionnaire data:', error);
+            // Fallback to embedded questions
+            this.loadFallbackQuestions();
+        }
+    }
+
+    loadFallbackQuestions() {
+        // Embedded fallback questions if JSON fails
         this.sections = [
             {
                 id: "developmental_history",
-                name: "Life Experiences & Development",
+                name: "Life Experiences & Development", 
                 questions: [
                     {
                         id: "early_childhood_moments",
                         text: "When you think back to your early childhood, what moments stand out the most emotionally?",
                         type: "text",
-                        maxLength: 1000
-                    },
-                    {
-                        id: "childhood_safety",
-                        text: "Can you describe a time when you felt very safe or very unsafe as a child?",
-                        type: "text",
-                        maxLength: 1000
-                    },
-                    // ... Continue with all 47 questions from your questionnaire
-                    {
-                        id: "understanding_story",
-                        text: "If someone wanted to truly understand you, what story would you tell them first?",
-                        type: "text",
                         maxLength: 1500
-                    }
-                ]
-            },
-            {
-                id: "personality_assessment",
-                name: "Core Personality",
-                questions: [
-                    {
-                        id: "big_five_openness",
-                        text: "How open are you to new experiences? (1- Very traditional to 10- Very adventurous)",
-                        type: "scale",
-                        min: 1,
-                        max: 10
                     },
-                    {
-                        id: "big_five_conscientiousness", 
-                        text: "How organized and disciplined are you? (1- Very spontaneous to 10- Very organized)",
-                        type: "scale",
-                        min: 1,
-                        max: 10
-                    },
-                    // ... Include all Big Five facets
+                    // ... include essential questions as fallback
                 ]
             }
         ];
     }
 
+    getCurrentSection() {
+        return this.sections[this.currentSection];
+    }
+
     getCurrentQuestion() {
-        return this.sections[this.currentSection].questions[this.currentQuestion];
+        const section = this.getCurrentSection();
+        return section ? section.questions[this.currentQuestion] : null;
+    }
+
+    getTotalQuestions() {
+        return this.sections.reduce((total, section) => total + section.questions.length, 0);
+    }
+
+    getAnsweredCount() {
+        return Object.keys(this.responses).length;
     }
 
     getProgress() {
-        const totalQuestions = this.sections.reduce((total, section) => 
-            total + section.questions.length, 0);
-        const answeredQuestions = Object.keys(this.responses).length;
-        return (answeredQuestions / totalQuestions) * 100;
+        return (this.getAnsweredCount() / this.getTotalQuestions()) * 100;
     }
 
     saveResponse(questionId, response) {
