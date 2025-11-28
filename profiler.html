@@ -502,6 +502,7 @@
                 <div class="export-options">
                     <button id="export-btn" class="btn-primary" onclick="app.exportNPIBrain()">Download .npibrain File</button>
                     <button id="avatar-btn" class="btn-secondary" onclick="app.showAvatarMessage()">Continue to Avatar Creator</button>
+                    <button id="library-btn" class="btn-secondary" onclick="app.saveToLibrary()">Save to NPI Library</button>
                 </div>
             </div>
         </div>
@@ -980,8 +981,6 @@
                 };
             }
 
-            localStorage.setItem('new_npi_created', JSON.stringify(npiBrain));
-
             analyzeReasoningStyle(responses) {
                 const text = Object.values(responses).map(r => r.value).join(' ').toLowerCase();
                 if (text.includes('logical') || text.includes('system')) return "principled_directness";
@@ -1045,6 +1044,7 @@
                 `;
             }
 
+            // === UPDATED: Save to library when exporting ===
             exportNPIBrain() {
                 if (!this.npiBrain) {
                     alert('Please complete the questionnaire first.');
@@ -1059,11 +1059,33 @@
                 link.click();
                 URL.revokeObjectURL(url);
                 
-                alert('✅ Your NPI brain has been exported!\n\nYou can now import this .npibrain file into the Avatar Creator.');
+                // === ADDED: Save to library ===
+                this.saveToLibrary();
+                
+                alert('✅ Your NPI brain has been exported and saved to your library!\n\nYou can now import this .npibrain file into the Avatar Creator or find it in your NPI Library.');
             }
 
+            // === ADDED: New method to save to library ===
+            saveToLibrary() {
+                if (!this.npiBrain) {
+                    alert('Please complete the questionnaire first.');
+                    return;
+                }
+
+                // Save to library storage
+                localStorage.setItem('new_npi_created', JSON.stringify(this.npiBrain));
+                
+                alert('✅ Your NPI brain has been saved to your library!\n\nYou can now access it from the NPI Library to create avatars or make changes.');
+            }
+
+            // === UPDATED: Save to library before showing avatar message ===
             showAvatarMessage() {
-                alert('🎭 Avatar Creator - Coming Soon!\n\nYour NPI brain is ready for integration with 3D avatars and MetaHuman characters.');
+                // Save to library before redirecting
+                if (this.npiBrain) {
+                    localStorage.setItem('new_npi_created', JSON.stringify(this.npiBrain));
+                }
+                
+                alert('🎭 Avatar Creator - Ready!\n\nYour NPI brain has been saved to your library. You can now:\n\n1. Open the Avatar Creator\n2. Click "Load from NPI Library"\n3. Select your NPI to create an avatar!');
             }
 
             delay(ms) {
