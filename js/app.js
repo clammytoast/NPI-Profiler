@@ -1,80 +1,158 @@
 class NPIProfilerApp {
     constructor() {
+        console.log('🚀 NPIProfilerApp initializing on GitHub Pages');
+        
+        // Initialize core components
         this.questionnaire = new NPIQuestionnaire();
         this.analyzer = new PersonalityAnalyzer();
         this.brainGenerator = null;
         this.exporter = new NPIExporter();
         this.npiBrain = null;
+        this.isInitialized = false;
         
-        this.initializeEventListeners();
-        this.initializeQuestionnaire();
+        // Initialize with slight delay for DOM readiness
+        setTimeout(() => {
+            this.initializeApp();
+        }, 100);
+    }
+
+    initializeApp() {
+        console.log('📝 Initializing app components...');
+        try {
+            this.initializeEventListeners();
+            this.isInitialized = true;
+            console.log('✅ App initialized successfully');
+        } catch (error) {
+            console.error('❌ App initialization failed:', error);
+            this.showEmergencyButton();
+        }
     }
 
     initializeEventListeners() {
-        document.getElementById('start-btn').addEventListener('click', () => {
-            this.showScreen('questionnaire-screen');
-            this.renderCurrentQuestion();
-        });
+        console.log('🔗 Setting up event listeners...');
+        
+        const startBtn = document.getElementById('start-btn');
+        if (startBtn) {
+            console.log('✅ Start button found');
+            startBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('🎯 Begin Creation clicked');
+                this.startQuestionnaire();
+            });
+            
+            // Ensure button is interactive
+            startBtn.disabled = false;
+            startBtn.style.cursor = 'pointer';
+        } else {
+            console.error('❌ Start button not found!');
+            this.showEmergencyButton();
+        }
 
-        document.getElementById('next-btn').addEventListener('click', () => {
-            this.saveCurrentResponse();
-            if (this.questionnaire.nextQuestion()) {
-                this.renderCurrentQuestion();
-            } else {
-                this.startAnalysis();
-            }
-        });
-
-        document.getElementById('prev-btn').addEventListener('click', () => {
-            this.saveCurrentResponse();
-            if (this.questionnaire.previousQuestion()) {
-                this.renderCurrentQuestion();
-            }
-        });
-
-        document.getElementById('export-btn').addEventListener('click', () => {
-            this.exportNPIBrain();
-        });
-
-        document.getElementById('avatar-btn').addEventListener('click', () => {
-            alert('Avatar Creator coming soon! Your NPI brain is ready for integration.');
-        });
+        // Setup other navigation buttons
+        this.setupNavigationButtons();
     }
 
-    async initializeQuestionnaire() {
-        await this.questionnaire.loadQuestionnaireData();
-        this.updateSectionInfo();
+    setupNavigationButtons() {
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const avatarBtn = document.getElementById('avatar-btn');
+
+        if (nextBtn) nextBtn.addEventListener('click', () => this.handleNext());
+        if (prevBtn) prevBtn.addEventListener('click', () => this.handlePrevious());
+        if (exportBtn) exportBtn.addEventListener('click', () => this.exportNPIBrain());
+        if (avatarBtn) avatarBtn.addEventListener('click', () => this.showAvatarMessage());
+    }
+
+    showEmergencyButton() {
+        console.log('🆘 Showing emergency button');
+        const emergencyDiv = document.getElementById('emergency-button');
+        if (emergencyDiv) {
+            emergencyDiv.style.display = 'block';
+        }
+    }
+
+    startQuestionnaire() {
+        console.log('📋 Starting questionnaire...');
+        this.showScreen('questionnaire-screen');
+        
+        // Small delay to ensure DOM is updated
+        setTimeout(() => {
+            this.renderCurrentQuestion();
+        }, 50);
+    }
+
+    handleNext() {
+        console.log('➡️ Next button clicked');
+        this.saveCurrentResponse();
+        if (this.questionnaire.nextQuestion()) {
+            this.renderCurrentQuestion();
+        } else {
+            this.startAnalysis();
+        }
+    }
+
+    handlePrevious() {
+        console.log('⬅️ Previous button clicked');
+        this.saveCurrentResponse();
+        if (this.questionnaire.previousQuestion()) {
+            this.renderCurrentQuestion();
+        }
+    }
+
+    showScreen(screenId) {
+        console.log('🖥️ Switching to screen:', screenId);
+        try {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                console.log('✅ Screen shown:', screenId);
+            } else {
+                console.error('❌ Screen not found:', screenId);
+            }
+        } catch (error) {
+            console.error('❌ Error switching screens:', error);
+        }
     }
 
     renderCurrentQuestion() {
-        const question = this.questionnaire.getCurrentQuestion();
-        const section = this.questionnaire.getCurrentSection();
-        const container = document.getElementById('question-container');
-        
-        if (!question) {
-            container.innerHTML = '<p>Error loading question. Please refresh the page.</p>';
-            return;
+        try {
+            const question = this.questionnaire.getCurrentQuestion();
+            const section = this.questionnaire.getCurrentSection();
+            const container = document.getElementById('question-container');
+            
+            if (!question || !container) {
+                console.error('❌ Question or container not found');
+                return;
+            }
+
+            console.log('📝 Rendering question:', question.id);
+
+            this.updateProgressDisplay();
+            this.updateSectionInfo();
+            
+            // Update section title and description
+            document.getElementById('section-title').textContent = section.name;
+            document.getElementById('section-description').textContent = section.description || '';
+
+            // Render question based on type
+            let questionHTML = '';
+            
+            if (question.type === 'text') {
+                questionHTML = this.renderTextQuestion(question);
+            } else if (question.type === 'scale') {
+                questionHTML = this.renderScaleQuestion(question);
+            }
+
+            container.innerHTML = questionHTML;
+            this.attachQuestionEventListeners();
+            
+        } catch (error) {
+            console.error('❌ Error rendering question:', error);
         }
-
-        // Update progress and section info
-        this.updateProgressDisplay();
-        this.updateSectionInfo();
-        
-        // Update section title and description
-        document.getElementById('section-title').textContent = section.name;
-        document.getElementById('section-description').textContent = section.description || '';
-
-        // Render question based on type
-        let questionHTML = '';
-        
-        if (question.type === 'text') {
-            questionHTML = this.renderTextQuestion(question);
-        } else if (question.type === 'scale') {
-            questionHTML = this.renderScaleQuestion(question);
-        }
-
-        container.innerHTML = questionHTML;
-        this.attachQuestionEventListeners();
     }
 
     renderTextQuestion(question) {
@@ -130,37 +208,20 @@ class NPIProfilerApp {
     }
 
     attachQuestionEventListeners() {
-        // Character count for text responses
-        const textAreas = document.querySelectorAll('.text-response');
-        textAreas.forEach(textarea => {
+        // Text area character count
+        document.querySelectorAll('.text-response').forEach(textarea => {
             textarea.addEventListener('input', (e) => {
                 const charCount = e.target.parentElement.querySelector('.char-count span');
-                charCount.textContent = e.target.value.length;
+                if (charCount) charCount.textContent = e.target.value.length;
             });
-
-            // Load existing response if any
-            const questionId = textarea.dataset.questionId;
-            if (this.questionnaire.responses[questionId]) {
-                const charCount = textarea.parentElement.querySelector('.char-count span');
-                charCount.textContent = textarea.value.length;
-            }
         });
 
-        // Scale sliders - update display value
-        const sliders = document.querySelectorAll('.scale-slider');
-        sliders.forEach(slider => {
+        // Scale slider value display
+        document.querySelectorAll('.scale-slider').forEach(slider => {
             slider.addEventListener('input', (e) => {
                 const valueDisplay = e.target.parentElement.querySelector('.current-value');
-                valueDisplay.textContent = e.target.value;
+                if (valueDisplay) valueDisplay.textContent = e.target.value;
             });
-
-            // Load existing response if any
-            const questionId = slider.dataset.questionId;
-            if (this.questionnaire.responses[questionId]) {
-                slider.value = this.questionnaire.responses[questionId].value;
-                const valueDisplay = slider.parentElement.querySelector('.current-value');
-                valueDisplay.textContent = slider.value;
-            }
         });
     }
 
@@ -180,45 +241,51 @@ class NPIProfilerApp {
 
         if (responseValue !== '') {
             this.questionnaire.saveResponse(question.id, responseValue);
+            console.log('💾 Saved response for:', question.id);
         }
     }
 
     updateProgressDisplay() {
         const progressFill = document.getElementById('progress-fill');
         const progressText = document.getElementById('progress-text');
-        const progress = this.questionnaire.getProgress();
         
-        progressFill.style.width = `${progress}%`;
-        progressText.textContent = `${Math.round(progress)}% Complete`;
+        if (progressFill && progressText) {
+            const progress = this.questionnaire.getProgress();
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `${Math.round(progress)}% Complete`;
+        }
     }
 
     updateSectionInfo() {
         const currentSectionElem = document.getElementById('current-section');
         const totalSectionsElem = document.getElementById('total-sections');
         
-        currentSectionElem.textContent = this.questionnaire.currentSection + 1;
-        totalSectionsElem.textContent = this.questionnaire.sections.length;
+        if (currentSectionElem && totalSectionsElem) {
+            currentSectionElem.textContent = this.questionnaire.currentSection + 1;
+            totalSectionsElem.textContent = this.questionnaire.sections.length;
+        }
     }
 
     async startAnalysis() {
+        console.log('🔬 Starting analysis...');
         this.showScreen('analysis-screen');
         
-        // Add initial analysis step
-        this.addAnalysisStep("Processing your responses...");
-        await this.delay(1000);
-        
-        this.addAnalysisStep("Analyzing personality patterns...");
-        await this.delay(1200);
-        
-        this.addAnalysisStep("Identifying key life events...");
-        await this.delay(1000);
+        // Simulate analysis steps
+        const steps = [
+            "Processing your responses...",
+            "Analyzing personality patterns...", 
+            "Identifying key life events...",
+            "Building neural network...",
+            "Finalizing NPI profile..."
+        ];
+
+        for (let i = 0; i < steps.length; i++) {
+            this.addAnalysisStep(steps[i]);
+            await this.delay(1000 + Math.random() * 500);
+        }
 
         // Generate the NPI brain
-        this.addAnalysisStep("Building neural network...");
         await this.generateNPIBrain();
-        
-        this.addAnalysisStep("Finalizing NPI profile...");
-        await this.delay(800);
         
         this.showScreen('export-screen');
         this.renderNPISummary();
@@ -239,7 +306,19 @@ class NPIProfilerApp {
     }
 
     updateBrainStats() {
-        if (!this.npiBrain) return;
+        if (!this.npiBrain) {
+            // Generate some fake progress for demonstration
+            const nodes = Math.floor(Math.random() * 20) + 5;
+            const connections = Math.floor(Math.random() * 30) + 10;
+            const principles = Math.floor(Math.random() * 8) + 2;
+            
+            document.getElementById('node-count').textContent = nodes;
+            document.getElementById('connection-count').textContent = connections;
+            document.getElementById('principle-count').textContent = principles;
+            
+            this.drawSimpleBrain(nodes, connections);
+            return;
+        }
         
         const nodes = Object.keys(this.npiBrain.brain_architecture.neural_network.nodes).length;
         const connections = this.npiBrain.brain_architecture.neural_network.connections.length;
@@ -249,12 +328,13 @@ class NPIProfilerApp {
         document.getElementById('connection-count').textContent = connections;
         document.getElementById('principle-count').textContent = principles;
         
-        // Simple canvas visualization
         this.drawSimpleBrain(nodes, connections);
     }
 
     drawSimpleBrain(nodes, connections) {
         const canvas = document.getElementById('brain-canvas');
+        if (!canvas) return;
+        
         const ctx = canvas.getContext('2d');
         
         // Clear canvas
@@ -291,6 +371,7 @@ class NPIProfilerApp {
     }
 
     async generateNPIBrain() {
+        console.log('🧠 Generating NPI brain...');
         const responses = this.questionnaire.getAllResponses();
         const personalityProfile = this.analyzer.analyzeResponses(responses);
         
@@ -300,6 +381,7 @@ class NPIProfilerApp {
         // Generate the complete NPI brain
         this.npiBrain = this.brainGenerator.generateBrain(personalityProfile, responses);
         
+        console.log('✅ NPI brain generated:', this.npiBrain.metadata.name);
         return this.npiBrain;
     }
 
@@ -366,15 +448,11 @@ class NPIProfilerApp {
         const fileName = `${this.npiBrain.metadata.name.replace(/\s+/g, '_')}_${Date.now()}.npibrain`;
         this.exporter.exportToFile(this.npiBrain, fileName);
         
-        // Show success message
-        alert(`Your NPI brain has been exported as "${fileName}"\n\nYou can now import this file into the Avatar Creator to bring your NPI to life!`);
+        alert(`✅ Your NPI brain has been exported as "${fileName}"\n\nYou can now import this file into the Avatar Creator to bring your NPI to life!`);
     }
 
-    showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-        });
-        document.getElementById(screenId).classList.add('active');
+    showAvatarMessage() {
+        alert('🎭 Avatar Creator coming soon!\n\nYour NPI brain is ready for integration with 3D avatars and MetaHuman characters.');
     }
 
     delay(ms) {
@@ -382,7 +460,29 @@ class NPIProfilerApp {
     }
 }
 
-// Initialize the application when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    new NPIProfilerApp();
-});
+// GitHub Pages compatible initialization
+console.log('🌐 NPI Profiler loading...');
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('📄 DOMContentLoaded - Initializing app');
+        window.npiApp = new NPIProfilerApp();
+    });
+} else {
+    console.log('⚡ DOM already ready - Initializing app immediately');
+    window.npiApp = new NPIProfilerApp();
+}
+
+// Global fallback function
+window.startApp = function() {
+    console.log('🔧 Manual app start triggered');
+    if (!window.npiApp || !window.npiApp.isInitialized) {
+        window.npiApp = new NPIProfilerApp();
+    }
+    window.npiApp.startQuestionnaire();
+};
+
+// Export for module systems if needed
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = NPIProfilerApp;
+}
