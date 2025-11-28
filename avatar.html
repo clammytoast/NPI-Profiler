@@ -535,8 +535,8 @@
                 this.currentNPIBrain = null;
                 this.avatarUrl = null;
                 this.avatarConfig = {};
-                this.subdomain = 'https://npi-plataform.readyplayer.me/avatar'; // Change this to your Ready Player Me subdomain
-                console.log('🚀 NPI Avatar Creator initialized');
+                this.subdomain = 'npi-plataform'; // Your Ready Player Me subdomain
+                console.log('🚀 NPI Avatar Creator initialized with subdomain:', this.subdomain);
             }
 
             startAvatarCreation() {
@@ -682,39 +682,58 @@
                 this.avatarUrl = null;
                 finalizeBtn.disabled = true;
                 statusElement.className = 'avatar-status waiting';
-                statusElement.textContent = 'Waiting for avatar creation...';
+                statusElement.textContent = `Loading NPI Platform Avatar Creator...`;
                 
-                // Configure Ready Player Me with correct URL structure
+                // Build the URL with your subdomain
                 const config = {
                     bodyType: 'fullbody',
-                    quickStart: false, // Set to false to see the full avatar creation flow
+                    quickStart: false,
                     gender: 'none'
                 };
 
-                // Build the URL correctly for Ready Player Me
-                let url = `https://${this.subdomain}.readyplayer.me`;
+                // Use your specific subdomain
+                let url = `https://${this.subdomain}.readyplayer.me/avatar`;
                 url += `?bodyType=${config.bodyType}`;
                 url += `&gender=${config.gender}`;
                 url += `&quickStart=${config.quickStart}`;
-
-                // Add frame API parameter if needed
                 url += `&frameApi`;
 
-                console.log('Loading Ready Player Me URL:', url);
+                console.log('Loading Ready Player Me with URL:', url);
                 frame.src = url;
 
-                // Listen for avatar creation events
+                // Set up message listener for Ready Player Me events
+                this.setupFrameListener();
+
+                // Set timeout to check if frame loads properly
+                setTimeout(() => {
+                    if (!this.avatarUrl) {
+                        console.log('Ready Player Me frame should be loaded now');
+                        statusElement.textContent = 'Avatar creator loaded - start creating your avatar!';
+                    }
+                }, 3000);
+            }
+
+            setupFrameListener() {
+                // Remove any existing listener to avoid duplicates
+                window.removeEventListener('message', this.handleReadyPlayerMeMessage);
+                
+                // Add new listener
                 window.addEventListener('message', this.handleReadyPlayerMeMessage.bind(this));
                 console.log('Ready Player Me event listener attached');
             }
 
             handleReadyPlayerMeMessage(event) {
-                console.log('Received message from Ready Player Me:', event);
+                console.log('Received message:', event);
                 
-                // Handle messages from Ready Player Me
+                // Check if the message is from Ready Player Me
+                if (event.origin !== `https://${this.subdomain}.readyplayer.me`) {
+                    console.log('Message from different origin:', event.origin);
+                    return;
+                }
+
                 if (event.data && event.data.source === 'readyplayerme') {
                     const eventData = event.data;
-                    console.log('Ready Player Me event:', eventData);
+                    console.log('Ready Player Me event detected:', eventData);
 
                     const statusElement = document.getElementById('avatar-status');
                     const finalizeBtn = document.getElementById('finalize-btn');
@@ -727,26 +746,11 @@
                             break;
                             
                         case 'v1.avatar.exported':
-                            this.avatarUrl = eventData.data.url;
-                            this.avatarConfig = eventData.data;
-                            
-                            statusElement.className = 'avatar-status success';
-                            statusElement.textContent = '✅ Avatar created successfully! Click "Use This Avatar" to continue.';
-                            finalizeBtn.disabled = false;
-                            
-                            console.log('Avatar created:', this.avatarUrl);
+                            this.handleAvatarExported(eventData.data);
                             break;
                             
                         case 'v1.avatar.created':
-                            // Fallback for different event naming
-                            this.avatarUrl = eventData.data.url;
-                            this.avatarConfig = eventData.data;
-                            
-                            statusElement.className = 'avatar-status success';
-                            statusElement.textContent = '✅ Avatar created successfully! Click "Use This Avatar" to continue.';
-                            finalizeBtn.disabled = false;
-                            
-                            console.log('Avatar created (v1):', this.avatarUrl);
+                            this.handleAvatarExported(eventData.data);
                             break;
                             
                         case 'v1.user.set':
@@ -755,9 +759,28 @@
                             
                         case 'v1.avatar.change':
                             console.log('Avatar changed:', eventData.data);
+                            statusElement.textContent = 'Avatar updated - continue customizing or click "Done" when finished';
                             break;
+                            
+                        default:
+                            console.log('Unhandled Ready Player Me event:', eventData.eventName);
                     }
                 }
+            }
+
+            handleAvatarExported(avatarData) {
+                this.avatarUrl = avatarData.url;
+                this.avatarConfig = avatarData;
+                
+                const statusElement = document.getElementById('avatar-status');
+                const finalizeBtn = document.getElementById('finalize-btn');
+                
+                statusElement.className = 'avatar-status success';
+                statusElement.textContent = '✅ Avatar created successfully! Click "Use This Avatar" to continue.';
+                finalizeBtn.disabled = false;
+                
+                console.log('Avatar exported successfully:', this.avatarUrl);
+                console.log('Full avatar data:', this.avatarConfig);
             }
 
             updateNPIIntegrationPanel() {
@@ -861,6 +884,7 @@
                             <div class="demo-avatar">✅</div>
                             <p style="margin-top: 1rem;">Your NPI Avatar is Ready!</p>
                             <p><small>Avatar URL: ${this.avatarUrl}</small></p>
+                            <p><small>Your avatar has been integrated with your NPI personality traits</small></p>
                         </div>
                     `;
                 }
@@ -919,7 +943,8 @@
                     },
                     metadata: {
                         exporter: "NPI Avatar Creator v1.0",
-                        export_date: new Date().toISOString()
+                        export_date: new Date().toISOString(),
+                        subdomain: this.subdomain
                     }
                 };
 
@@ -997,9 +1022,9 @@
                     npi_spec_version: "1.0",
                     metadata: {
                         name: "Demo NPI Brain",
-                        creator: "demo",
+                        creator: "NPI Platform",
                         created_date: new Date().toISOString(),
-                        npi_type: "demo",
+                        npi_type: "nurture_based",
                         version: "1.0.0"
                     },
                     brain_architecture: {
