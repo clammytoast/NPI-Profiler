@@ -980,6 +980,8 @@
                 };
             }
 
+            localStorage.setItem('new_npi_created', JSON.stringify(npiBrain));
+
             analyzeReasoningStyle(responses) {
                 const text = Object.values(responses).map(r => r.value).join(' ').toLowerCase();
                 if (text.includes('logical') || text.includes('system')) return "principled_directness";
