@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPI Avatar Creator - Bring Your Digital Mind to Life</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .welcome-content {
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .welcome-content p {
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: #4a5568;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2d3748;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #4a5568;
+            background: #edf2f7;
+        }
+
+        .upload-area.drag-over {
+            border-color: #4a5568;
+            background: #e2e8f0;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #718096;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .avatar-creation-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        #ready-player-me-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 12px;
+            background: #f7fafc;
+        }
+
+        .npi-integration-panel {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid #4a5568;
+        }
+
+        .npi-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .personality-traits {
+            margin: 1.5rem 0;
+        }
+
+        .trait-bar {
+            margin: 0.5rem 0;
+        }
+
+        .trait-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .trait-progress {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .trait-fill {
+            height: 100%;
+            background: #4a5568;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .preview-area {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        #avatar-preview {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f7fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a5568;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .avatar-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                padding: 1.5rem;
+            }
+            
+            .avatar-creation-area {
+                grid-template-columns: 1fr;
+            }
+            
+            #ready-player-me-frame {
+                height: 400px;
+            }
+            
+            .export-options {
+                flex-direction: column;
+            }
+            
+            .npi-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="container">
+                <h1>NPI Avatar Creator</h1>
+                <p class="subtitle">Bring Your Digital Mind to Life with Ready Player Me</p>
+                <div class="welcome-content">
+                    <p>Upload your .npibrain file to create a personalized 3D avatar that embodies your unique personality, reasoning style, and emotional patterns.</p>
+                    <p><strong>Features:</strong></p>
+                    <ul style="text-align: left; display: inline-block; margin: 1rem 0;">
+                        <li>Create avatars with Ready Player Me's easy editor</li>
+                        <li>Automatically configure personality-based expressions</li>
+                        <li>Export for use in games, VR, and virtual worlds</li>
+                        <li>Integrate with your NPI brain's reasoning patterns</li>
+                    </ul>
+                    <button class="btn-primary" onclick="app.startAvatarCreation()">Start Avatar Creation</button>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn-secondary" onclick="app.showDemo()">See Demo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Screen -->
+        <div id="upload-screen" class="screen">
+            <div class="container">
+                <h1>Upload Your NPI Brain</h1>
+                <p class="subtitle">Import your .npibrain file to personalize your avatar</p>
+                
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📁</div>
+                    <h3>Drag & Drop Your .npibrain File</h3>
+                    <p>or click to browse your files</p>
+                    <input type="file" id="file-input" class="file-input" accept=".npibrain,.json">
+                    <button class="btn-primary" onclick="document.getElementById('file-input').click()">Choose File</button>
+                </div>
+
+                <div class="file-info" id="file-info">
+                    <h4>📊 NPI Brain Loaded Successfully!</h4>
+                    <div id="file-details"></div>
+                    <button class="btn-primary" onclick="app.proceedToAvatar()">Create Avatar</button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing your NPI brain...</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn-secondary" onclick="app.showWelcome()">← Back</button>
+                    <button class="btn-secondary" onclick="app.loadDemoBrain()">Use Demo Brain</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Creation Screen -->
+        <div id="creation-screen" class="screen">
+            <div class="container">
+                <h1>Create Your Avatar</h1>
+                <p class="subtitle">Customize your 3D avatar with Ready Player Me</p>
+                
+                <div class="avatar-creation-area">
+                    <div>
+                        <iframe 
+                            id="ready-player-me-frame"
+                            src=""
+                            allow="camera *; microphone *">
+                        </iframe>
+                        <div class="avatar-actions">
+                            <button class="btn-secondary" onclick="app.regenerateAvatar()">New Avatar</button>
+                            <button class="btn-primary" onclick="app.finalizeAvatar()">Use This Avatar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="npi-integration-panel">
+                        <h3>NPI Personality Integration</h3>
+                        <div id="npi-integration-content">
+                            <p>Your avatar will be configured based on your NPI brain's personality traits and reasoning patterns.</p>
+                            
+                            <div class="npi-stats" id="npi-stats">
+                                <!-- Stats will be populated here -->
+                            </div>
+                            
+                            <div class="personality-traits">
+                                <h4>Personality Configuration</h4>
+                                <div class="trait-bar">
+                                    <div class="trait-label">
+                                        <span>Expressiveness</span>
+                                        <span id="expressiveness-value">70%</span>
+                                    </div>
+                                    <div class="trait-progress">
+                                        <div class="trait-fill" id="expressiveness-bar" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="trait-bar">
+                                    <div class="trait-label">
+                                        <span>Animation Style</span>
+                                        <span id="animation-value">Balanced</span>
+                                    </div>
+                                    <div class="trait-progress">
+                                        <div class="trait-fill" id="animation-bar" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="trait-bar">
+                                    <div class="trait-label">
+                                        <span>Voice Tone</span>
+                                        <span id="voice-value">Analytical</span>
+                                    </div>
+                                    <div class="trait-progress">
+                                        <div class="trait-fill" id="voice-bar" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn-secondary" onclick="app.showUpload()">← Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Screen -->
+        <div id="preview-screen" class="screen">
+            <div class="container">
+                <h1>Your NPI Avatar is Ready!</h1>
+                <p class="subtitle">Meet your digital embodiment</p>
+                
+                <div class="preview-area">
+                    <div id="avatar-preview">
+                        <p>Avatar preview will appear here</p>
+                    </div>
+                    
+                    <div class="success-message" id="success-message">
+                        ✅ Avatar successfully configured with your NPI personality!
+                    </div>
+
+                    <div class="npi-stats" id="final-stats">
+                        <!-- Final stats will be populated here -->
+                    </div>
+                </div>
+
+                <div class="export-options">
+                    <button class="btn-primary" onclick="app.exportAvatar()">Download Avatar</button>
+                    <button class="btn-secondary" onclick="app.exportForUnreal()">Export for Unreal Engine</button>
+                    <button class="btn-secondary" onclick="app.exportForUnity()">Export for Unity</button>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn-secondary" onclick="app.showCreation()">← Back to Editor</button>
+                    <button class="btn-primary" onclick="app.startOver()">Create Another Avatar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === COMPLETE AVATAR CREATOR ===
+        class NPIAvatarCreator {
+            constructor() {
+                this.currentNPIBrain = null;
+                this.avatarUrl = null;
+                this.readyPlayerMeUrl = "https://readyplayer.me/avatar?frameApi";
+                console.log('🚀 NPI Avatar Creator initialized');
+            }
+
+            startAvatarCreation() {
+                this.showScreen('upload-screen');
+            }
+
+            showWelcome() {
+                this.showScreen('welcome-screen');
+            }
+
+            showUpload() {
+                this.showScreen('upload-screen');
+            }
+
+            showCreation() {
+                this.showScreen('creation-screen');
+            }
+
+            showScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(screen => {
+                    screen.classList.remove('active');
+                });
+                document.getElementById(screenId).classList.add('active');
+            }
+
+            setupEventListeners() {
+                // File upload handling
+                const fileInput = document.getElementById('file-input');
+                const uploadArea = document.getElementById('upload-area');
+                
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFileSelect(e);
+                });
+
+                // Drag and drop
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('drag-over');
+                });
+
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('drag-over');
+                });
+
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('drag-over');
+                    this.handleFileDrop(e);
+                });
+            }
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file && file.name.endsWith('.npibrain')) {
+                    this.processNPIBrainFile(file);
+                } else {
+                    alert('Please select a valid .npibrain file');
+                }
+            }
+
+            handleFileDrop(event) {
+                const file = event.dataTransfer.files[0];
+                if (file && file.name.endsWith('.npibrain')) {
+                    this.processNPIBrainFile(file);
+                } else {
+                    alert('Please drop a valid .npibrain file');
+                }
+            }
+
+            processNPIBrainFile(file) {
+                const loading = document.getElementById('loading');
+                const fileInfo = document.getElementById('file-info');
+                
+                loading.classList.add('show');
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        this.currentNPIBrain = JSON.parse(e.target.result);
+                        setTimeout(() => {
+                            loading.classList.remove('show');
+                            this.displayFileInfo(file);
+                            fileInfo.classList.add('show');
+                        }, 1500);
+                    } catch (error) {
+                        loading.classList.remove('show');
+                        alert('Error reading NPI brain file. Please ensure it\'s a valid .npibrain file.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            displayFileInfo(file) {
+                const fileDetails = document.getElementById('file-details');
+                const brain = this.currentNPIBrain;
+                
+                fileDetails.innerHTML = `
+                    <p><strong>Name:</strong> ${brain.metadata?.name || 'Unnamed NPI'}</p>
+                    <p><strong>Created:</strong> ${new Date(brain.metadata?.created_date).toLocaleDateString()}</p>
+                    <p><strong>Type:</strong> ${brain.metadata?.npi_type || 'nurture_based'}</p>
+                    <p><strong>Nodes:</strong> ${brain.brain_architecture?.neural_network?.nodes || 'N/A'}</p>
+                    <p><strong>Reasoning Style:</strong> ${brain.brain_architecture?.reasoning_system?.default_style || 'balanced'}</p>
+                `;
+            }
+
+            proceedToAvatar() {
+                if (!this.currentNPIBrain) {
+                    alert('Please load an NPI brain file first');
+                    return;
+                }
+
+                this.showScreen('creation-screen');
+                this.initializeReadyPlayerMe();
+                this.updateNPIIntegrationPanel();
+            }
+
+            initializeReadyPlayerMe() {
+                const frame = document.getElementById('ready-player-me-frame');
+                
+                // Configure Ready Player Me with NPI personality hints
+                const config = {
+                    bodyType: 'fullbody',
+                    quickStart: true,
+                    gender: 'none' // Let user choose
+                };
+
+                const params = new URLSearchParams(config);
+                frame.src = `${this.readyPlayerMeUrl}&${params.toString()}`;
+
+                // Listen for avatar creation events
+                window.addEventListener('message', (event) => {
+                    if (event.data.source === 'readyplayerme') {
+                        console.log('Ready Player Me event:', event.data);
+                        this.handleReadyPlayerMeEvent(event.data);
+                    }
+                });
+            }
+
+            handleReadyPlayerMeEvent(event) {
+                switch (event.eventName) {
+                    case 'v1.avatar.exported':
+                        this.avatarUrl = event.data.url;
+                        console.log('Avatar created:', this.avatarUrl);
+                        break;
+                    case 'v1.frame.ready':
+                        console.log('Ready Player Me frame is ready');
+                        break;
+                }
+            }
+
+            updateNPIIntegrationPanel() {
+                if (!this.currentNPIBrain) return;
+
+                const brain = this.currentNPIBrain;
+                const statsContainer = document.getElementById('npi-stats');
+                
+                // Update stats
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">${brain.brain_architecture?.neural_network?.nodes || '25'}</div>
+                        <div class="stat-label">Neural Nodes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${brain.brain_architecture?.moral_framework?.principles?.length || '5'}</div>
+                        <div class="stat-label">Core Principles</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${Object.keys(brain.brain_architecture?.emotional_system?.triggers || {}).length}</div>
+                        <div class="stat-label">Emotional Triggers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${brain.brain_architecture?.reasoning_system?.default_style?.split('_').length || '2'}</div>
+                        <div class="stat-label">Reasoning Styles</div>
+                    </div>
+                `;
+
+                // Update personality configuration based on NPI brain
+                this.configurePersonalityTraits(brain);
+            }
+
+            configurePersonalityTraits(brain) {
+                const reasoningStyle = brain.brain_architecture?.reasoning_system?.default_style;
+                
+                // Configure traits based on reasoning style
+                if (reasoningStyle === 'principled_directness') {
+                    this.updateTrait('expressiveness', 40, 'Reserved');
+                    this.updateTrait('animation', 30, 'Controlled');
+                    this.updateTrait('voice', 20, 'Direct');
+                } else if (reasoningStyle === 'creative_exploration') {
+                    this.updateTrait('expressiveness', 80, 'Expressive');
+                    this.updateTrait('animation', 70, 'Dynamic');
+                    this.updateTrait('voice', 60, 'Engaging');
+                } else {
+                    this.updateTrait('expressiveness', 60, 'Balanced');
+                    this.updateTrait('animation', 50, 'Natural');
+                    this.updateTrait('voice', 40, 'Clear');
+                }
+            }
+
+            updateTrait(trait, value, label) {
+                document.getElementById(`${trait}-value`).textContent = label || `${value}%`;
+                document.getElementById(`${trait}-bar`).style.width = `${value}%`;
+            }
+
+            regenerateAvatar() {
+                const frame = document.getElementById('ready-player-me-frame');
+                frame.src = frame.src; // Reload the iframe
+            }
+
+            finalizeAvatar() {
+                if (!this.avatarUrl) {
+                    // For demo purposes, create a mock avatar URL
+                    this.avatarUrl = 'https://models.readyplayer.me/65f4f8c8c5f6a9c8e5f3b2a1.glb';
+                }
+
+                this.showScreen('preview-screen');
+                this.displayFinalAvatar();
+                this.showSuccessMessage();
+            }
+
+            displayFinalAvatar() {
+                const preview = document.getElementById('avatar-preview');
+                
+                if (this.avatarUrl) {
+                    preview.innerHTML = `
+                        <model-viewer
+                            src="${this.avatarUrl}"
+                            alt="Your NPI Avatar"
+                            auto-rotate
+                            camera-controls
+                            style="width: 100%; height: 100%; border-radius: 8px;">
+                        </model-viewer>
+                    `;
+                } else {
+                    preview.innerHTML = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">👤</div>
+                            <p>Your personalized NPI avatar</p>
+                            <p><small>Avatar would be displayed here with model-viewer</small></p>
+                        </div>
+                    `;
+                }
+
+                this.updateFinalStats();
+            }
+
+            updateFinalStats() {
+                const finalStats = document.getElementById('final-stats');
+                const brain = this.currentNPIBrain;
+                
+                finalStats.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">${brain.metadata?.name || 'My NPI'}</div>
+                        <div class="stat-label">Avatar Name</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${brain.brain_architecture?.reasoning_system?.default_style || 'balanced'}</div>
+                        <div class="stat-label">Personality Type</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Ready</div>
+                        <div class="stat-label">Integration Status</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">v1.0</div>
+                        <div class="stat-label">NPI Version</div>
+                    </div>
+                `;
+            }
+
+            showSuccessMessage() {
+                const success = document.getElementById('success-message');
+                success.classList.add('show');
+            }
+
+            exportAvatar() {
+                if (!this.avatarUrl) {
+                    alert('Please create an avatar first');
+                    return;
+                }
+
+                // Create export package
+                const exportData = {
+                    avatar: {
+                        glb_url: this.avatarUrl,
+                        created: new Date().toISOString(),
+                        npi_integration: true
+                    },
+                    npi_brain: this.currentNPIBrain,
+                    configuration: {
+                        personality_traits: this.getCurrentTraits(),
+                        export_formats: ['glb', 'fbx', 'vrm'],
+                        compatible_platforms: ['web', 'unity', 'unreal', 'vrchat']
+                    }
+                };
+
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `npi_avatar_${Date.now()}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+
+                alert('✅ Avatar exported successfully!\n\nThe export package includes your avatar model and NPI configuration.');
+            }
+
+            getCurrentTraits() {
+                return {
+                    expressiveness: document.getElementById('expressiveness-value').textContent,
+                    animation_style: document.getElementById('animation-value').textContent,
+                    voice_tone: document.getElementById('voice-value').textContent
+                };
+            }
+
+            exportForUnreal() {
+                alert('🚀 Unreal Engine Export\n\nYour avatar would be exported as an FBX file with MetaHuman compatibility and NPI behavior tree integration.');
+            }
+
+            exportForUnity() {
+                alert('🎮 Unity Export\n\nYour avatar would be exported as a prefab with NPI personality controller and animation overrides.');
+            }
+
+            startOver() {
+                this.currentNPIBrain = null;
+                this.avatarUrl = null;
+                this.showWelcome();
+            }
+
+            showDemo() {
+                alert('🎭 NPI Avatar Creator Demo\n\n1. Upload your .npibrain file\n2. Create avatar with Ready Player Me\n3. Automatic personality configuration\n4. Export for games and virtual worlds\n\nClick "Start Avatar Creation" to begin!');
+            }
+
+            loadDemoBrain() {
+                // Load a demo NPI brain
+                this.currentNPIBrain = {
+                    npi_spec_version: "1.0",
+                    metadata: {
+                        name: "Demo NPI Brain",
+                        creator: "demo",
+                        created_date: new Date().toISOString(),
+                        npi_type: "demo"
+                    },
+                    brain_architecture: {
+                        neural_network: {
+                            nodes: 42,
+                            connections: 156
+                        },
+                        reasoning_system: {
+                            default_style: "balanced_analysis",
+                            decision_frameworks: ["utility_of_truth", "autonomy_protection"]
+                        },
+                        emotional_system: {
+                            base_mood: "analytical_calm",
+                            triggers: { "injustice": 0.8, "illogic": 0.9 }
+                        },
+                        moral_framework: {
+                            principles: [
+                                { name: "Truth Seeking", strength: 0.9 },
+                                { name: "Autonomy Protection", strength: 0.8 }
+                            ]
+                        }
+                    }
+                };
+
+                this.displayFileInfo({ name: "demo.npibrain" });
+                document.getElementById('file-info').classList.add('show');
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+
+        // === INITIALIZATION ===
+        console.log('🎭 Initializing NPI Avatar Creator...');
+        window.app = new NPIAvatarCreator();
+        window.app.setupEventListeners();
+        console.log('✅ NPI Avatar Creator ready!');
+
+        // Add model-viewer polyfill if needed
+        if (!window.modelViewer) {
+            console.log('ℹ️ Model viewer not detected - using fallback display');
+        }
+    </script>
+</body>
+</html>
