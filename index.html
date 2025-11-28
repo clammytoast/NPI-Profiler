@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NPI Profiler - Create Your Digital Mind</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/questionnaire.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/questionnaire.css">
 </head>
 <body>
     <div id="app">
@@ -19,6 +19,9 @@
                     <p><strong>Time required:</strong> 30-45 minutes</p>
                     <p><strong>Questions:</strong> 47 comprehensive questions about your life and personality</p>
                     <button id="start-btn" class="btn-primary">Begin Creation</button>
+                    <div id="emergency-button" style="display: none; margin-top: 1rem;">
+                        <button class="btn-primary" onclick="window.startApp()">Emergency Start</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,12 +101,13 @@
         </div>
     </div>
 
-    <script src="js/questionnaire-engine.js"></script>
-    <script src="js/personality-analyzer.js"></script>
-    <script src="js/brain-generator.js"></script>
-    <script src="js/exporter.js"></script>
-    <script src="js/utils/neural-helpers.js"></script>
-    <script src="js/utils/validation.js"></script>
-    <script src="js/app.js"></script>
+    <!-- JavaScript Files -->
+    <script src="./js/questionnaire-engine.js"></script>
+    <script src="./js/personality-analyzer.js"></script>
+    <script src="./js/brain-generator.js"></script>
+    <script src="./js/exporter.js"></script>
+    <script src="./js/utils/neural-helpers.js"></script>
+    <script src="./js/utils/validation.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 </html>
