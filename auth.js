@@ -1,4 +1,4 @@
-// auth.js - User Authentication System
+// auth.js - Enhanced User Authentication System for Neura
 class AuthSystem {
     constructor() {
         this.currentUser = null;
@@ -7,7 +7,7 @@ class AuthSystem {
 
     loadUsers() {
         try {
-            return JSON.parse(localStorage.getItem('npi_users')) || {};
+            return JSON.parse(localStorage.getItem('neura_users')) || {};
         } catch (error) {
             console.error('Error loading users:', error);
             return {};
@@ -15,11 +15,10 @@ class AuthSystem {
     }
 
     saveUsers() {
-        localStorage.setItem('npi_users', JSON.stringify(this.users));
+        localStorage.setItem('neura_users', JSON.stringify(this.users));
     }
 
     async register(email, password, name) {
-        // Simulate API call delay
         await this.delay(1000);
         
         if (this.users[email]) {
@@ -32,18 +31,17 @@ class AuthSystem {
             email: email,
             name: name,
             createdAt: new Date().toISOString(),
-            library: [] // Each user gets their own NPI library
+            library: []
         };
 
-        // In a real app, you'd hash the password
         this.users[email] = {
             ...user,
-            password: btoa(password) // Basic encoding - use proper hashing in production
+            password: btoa(password)
         };
 
         this.saveUsers();
         this.currentUser = user;
-        localStorage.setItem('npi_current_user', JSON.stringify(user));
+        localStorage.setItem('neura_current_user', JSON.stringify(user));
         
         return user;
     }
@@ -56,29 +54,28 @@ class AuthSystem {
             throw new Error('User not found');
         }
 
-        // Basic password check - use proper hashing in production
         if (btoa(password) !== userData.password) {
             throw new Error('Invalid password');
         }
 
         const user = { ...userData };
-        delete user.password; // Don't store password in current user
+        delete user.password;
         
         this.currentUser = user;
-        localStorage.setItem('npi_current_user', JSON.stringify(user));
+        localStorage.setItem('neura_current_user', JSON.stringify(user));
         
         return user;
     }
 
     logout() {
         this.currentUser = null;
-        localStorage.removeItem('npi_current_user');
+        localStorage.removeItem('neura_current_user');
     }
 
     getCurrentUser() {
         if (!this.currentUser) {
             try {
-                const stored = localStorage.getItem('npi_current_user');
+                const stored = localStorage.getItem('neura_current_user');
                 this.currentUser = stored ? JSON.parse(stored) : null;
             } catch (error) {
                 console.error('Error loading current user:', error);
@@ -96,7 +93,6 @@ class AuthSystem {
         const user = this.getCurrentUser();
         if (!user) return [];
         
-        // Get user-specific library
         const userData = this.users[user.email];
         return userData ? userData.library : [];
     }
@@ -111,10 +107,23 @@ class AuthSystem {
         }
     }
 
+    verifyNPIOwnership(npiId) {
+        const user = this.getCurrentUser();
+        if (!user) return false;
+
+        const userLibrary = this.getUserLibrary();
+        return userLibrary.some(npi => npi.id === npiId);
+    }
+
+    getUserStorageKey(key) {
+        const user = this.getCurrentUser();
+        if (!user) return key;
+        return `${user.id}_${key}`;
+    }
+
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
 
-// Global auth instance
 window.auth = new AuthSystem();
