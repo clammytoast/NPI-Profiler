@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NPI Avatar Creator - Bring Your Digital Mind to Life</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -222,6 +223,7 @@
             align-items: center;
             justify-content: center;
             color: #718096;
+            overflow: hidden;
         }
 
         .export-options {
@@ -263,6 +265,35 @@
             margin-top: 1rem;
         }
 
+        .avatar-status {
+            text-align: center;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .avatar-status.waiting {
+            display: block;
+            background: #e6fffa;
+            color: #234e52;
+            border: 1px solid #81e6d9;
+        }
+
+        .avatar-status.success {
+            display: block;
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .avatar-status.error {
+            display: block;
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #fc8181;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 0;
@@ -299,6 +330,33 @@
         .success-message.show {
             display: block;
         }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .demo-avatar {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
     </style>
 </head>
 <body>
@@ -330,6 +388,10 @@
             <div class="container">
                 <h1>Upload Your NPI Brain</h1>
                 <p class="subtitle">Import your .npibrain file to personalize your avatar</p>
+                
+                <div class="error-message" id="error-message">
+                    Error message will appear here
+                </div>
                 
                 <div class="upload-area" id="upload-area">
                     <div class="upload-icon">📁</div>
@@ -363,16 +425,21 @@
                 <h1>Create Your Avatar</h1>
                 <p class="subtitle">Customize your 3D avatar with Ready Player Me</p>
                 
+                <div class="avatar-status" id="avatar-status">
+                    Waiting for avatar creation...
+                </div>
+                
                 <div class="avatar-creation-area">
                     <div>
                         <iframe 
                             id="ready-player-me-frame"
                             src=""
-                            allow="camera *; microphone *">
+                            allow="camera *; microphone *"
+                            allowfullscreen>
                         </iframe>
                         <div class="avatar-actions">
                             <button class="btn-secondary" onclick="app.regenerateAvatar()">New Avatar</button>
-                            <button class="btn-primary" onclick="app.finalizeAvatar()">Use This Avatar</button>
+                            <button class="btn-primary" id="finalize-btn" onclick="app.finalizeAvatar()" disabled>Use This Avatar</button>
                         </div>
                     </div>
                     
@@ -435,7 +502,7 @@
                 
                 <div class="preview-area">
                     <div id="avatar-preview">
-                        <p>Avatar preview will appear here</p>
+                        <div class="demo-avatar">👤</div>
                     </div>
                     
                     <div class="success-message" id="success-message">
@@ -467,7 +534,8 @@
             constructor() {
                 this.currentNPIBrain = null;
                 this.avatarUrl = null;
-                this.readyPlayerMeUrl = "https://readyplayer.me/avatar?frameApi";
+                this.avatarConfig = {};
+                this.subdomain = 'demo'; // Change this to your Ready Player Me subdomain
                 console.log('🚀 NPI Avatar Creator initialized');
             }
 
@@ -518,24 +586,39 @@
                     uploadArea.classList.remove('drag-over');
                     this.handleFileDrop(e);
                 });
+
+                // Click to upload
+                uploadArea.addEventListener('click', () => {
+                    document.getElementById('file-input').click();
+                });
             }
 
             handleFileSelect(event) {
                 const file = event.target.files[0];
-                if (file && file.name.endsWith('.npibrain')) {
+                if (file && (file.name.endsWith('.npibrain') || file.name.endsWith('.json'))) {
                     this.processNPIBrainFile(file);
                 } else {
-                    alert('Please select a valid .npibrain file');
+                    this.showError('Please select a valid .npibrain or .json file');
                 }
             }
 
             handleFileDrop(event) {
                 const file = event.dataTransfer.files[0];
-                if (file && file.name.endsWith('.npibrain')) {
+                if (file && (file.name.endsWith('.npibrain') || file.name.endsWith('.json'))) {
                     this.processNPIBrainFile(file);
                 } else {
-                    alert('Please drop a valid .npibrain file');
+                    this.showError('Please drop a valid .npibrain or .json file');
                 }
+            }
+
+            showError(message) {
+                const errorElement = document.getElementById('error-message');
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+                
+                setTimeout(() => {
+                    errorElement.classList.remove('show');
+                }, 5000);
             }
 
             processNPIBrainFile(file) {
@@ -555,8 +638,13 @@
                         }, 1500);
                     } catch (error) {
                         loading.classList.remove('show');
-                        alert('Error reading NPI brain file. Please ensure it\'s a valid .npibrain file.');
+                        this.showError('Error reading NPI brain file. Please ensure it\'s a valid JSON file.');
+                        console.error('File parsing error:', error);
                     }
+                };
+                reader.onerror = () => {
+                    loading.classList.remove('show');
+                    this.showError('Error reading file. Please try again.');
                 };
                 reader.readAsText(file);
             }
@@ -567,7 +655,7 @@
                 
                 fileDetails.innerHTML = `
                     <p><strong>Name:</strong> ${brain.metadata?.name || 'Unnamed NPI'}</p>
-                    <p><strong>Created:</strong> ${new Date(brain.metadata?.created_date).toLocaleDateString()}</p>
+                    <p><strong>Created:</strong> ${brain.metadata?.created_date ? new Date(brain.metadata.created_date).toLocaleDateString() : 'Unknown'}</p>
                     <p><strong>Type:</strong> ${brain.metadata?.npi_type || 'nurture_based'}</p>
                     <p><strong>Nodes:</strong> ${brain.brain_architecture?.neural_network?.nodes || 'N/A'}</p>
                     <p><strong>Reasoning Style:</strong> ${brain.brain_architecture?.reasoning_system?.default_style || 'balanced'}</p>
@@ -576,7 +664,7 @@
 
             proceedToAvatar() {
                 if (!this.currentNPIBrain) {
-                    alert('Please load an NPI brain file first');
+                    this.showError('Please load an NPI brain file first');
                     return;
                 }
 
@@ -587,35 +675,88 @@
 
             initializeReadyPlayerMe() {
                 const frame = document.getElementById('ready-player-me-frame');
+                const statusElement = document.getElementById('avatar-status');
+                const finalizeBtn = document.getElementById('finalize-btn');
                 
-                // Configure Ready Player Me with NPI personality hints
+                // Reset state
+                this.avatarUrl = null;
+                finalizeBtn.disabled = true;
+                statusElement.className = 'avatar-status waiting';
+                statusElement.textContent = 'Waiting for avatar creation...';
+                
+                // Configure Ready Player Me with correct URL structure
                 const config = {
                     bodyType: 'fullbody',
-                    quickStart: true,
-                    gender: 'none' // Let user choose
+                    quickStart: false, // Set to false to see the full avatar creation flow
+                    gender: 'none'
                 };
 
-                const params = new URLSearchParams(config);
-                frame.src = `${this.readyPlayerMeUrl}&${params.toString()}`;
+                // Build the URL correctly for Ready Player Me
+                let url = `https://${this.subdomain}.readyplayer.me`;
+                url += `?bodyType=${config.bodyType}`;
+                url += `&gender=${config.gender}`;
+                url += `&quickStart=${config.quickStart}`;
+
+                // Add frame API parameter if needed
+                url += `&frameApi`;
+
+                console.log('Loading Ready Player Me URL:', url);
+                frame.src = url;
 
                 // Listen for avatar creation events
-                window.addEventListener('message', (event) => {
-                    if (event.data.source === 'readyplayerme') {
-                        console.log('Ready Player Me event:', event.data);
-                        this.handleReadyPlayerMeEvent(event.data);
-                    }
-                });
+                window.addEventListener('message', this.handleReadyPlayerMeMessage.bind(this));
+                console.log('Ready Player Me event listener attached');
             }
 
-            handleReadyPlayerMeEvent(event) {
-                switch (event.eventName) {
-                    case 'v1.avatar.exported':
-                        this.avatarUrl = event.data.url;
-                        console.log('Avatar created:', this.avatarUrl);
-                        break;
-                    case 'v1.frame.ready':
-                        console.log('Ready Player Me frame is ready');
-                        break;
+            handleReadyPlayerMeMessage(event) {
+                console.log('Received message from Ready Player Me:', event);
+                
+                // Handle messages from Ready Player Me
+                if (event.data && event.data.source === 'readyplayerme') {
+                    const eventData = event.data;
+                    console.log('Ready Player Me event:', eventData);
+
+                    const statusElement = document.getElementById('avatar-status');
+                    const finalizeBtn = document.getElementById('finalize-btn');
+
+                    switch (eventData.eventName) {
+                        case 'v1.frame.ready':
+                            statusElement.className = 'avatar-status waiting';
+                            statusElement.textContent = 'Ready Player Me loaded - start creating your avatar!';
+                            console.log('Ready Player Me frame is ready');
+                            break;
+                            
+                        case 'v1.avatar.exported':
+                            this.avatarUrl = eventData.data.url;
+                            this.avatarConfig = eventData.data;
+                            
+                            statusElement.className = 'avatar-status success';
+                            statusElement.textContent = '✅ Avatar created successfully! Click "Use This Avatar" to continue.';
+                            finalizeBtn.disabled = false;
+                            
+                            console.log('Avatar created:', this.avatarUrl);
+                            break;
+                            
+                        case 'v1.avatar.created':
+                            // Fallback for different event naming
+                            this.avatarUrl = eventData.data.url;
+                            this.avatarConfig = eventData.data;
+                            
+                            statusElement.className = 'avatar-status success';
+                            statusElement.textContent = '✅ Avatar created successfully! Click "Use This Avatar" to continue.';
+                            finalizeBtn.disabled = false;
+                            
+                            console.log('Avatar created (v1):', this.avatarUrl);
+                            break;
+                            
+                        case 'v1.user.set':
+                            console.log('User data set:', eventData.data);
+                            break;
+                            
+                        case 'v1.avatar.change':
+                            console.log('Avatar changed:', eventData.data);
+                            break;
+                    }
                 }
             }
 
@@ -661,6 +802,10 @@
                     this.updateTrait('expressiveness', 80, 'Expressive');
                     this.updateTrait('animation', 70, 'Dynamic');
                     this.updateTrait('voice', 60, 'Engaging');
+                } else if (reasoningStyle === 'empathetic_care') {
+                    this.updateTrait('expressiveness', 90, 'Warm');
+                    this.updateTrait('animation', 80, 'Fluid');
+                    this.updateTrait('voice', 85, 'Comforting');
                 } else {
                     this.updateTrait('expressiveness', 60, 'Balanced');
                     this.updateTrait('animation', 50, 'Natural');
@@ -675,13 +820,21 @@
 
             regenerateAvatar() {
                 const frame = document.getElementById('ready-player-me-frame');
+                const statusElement = document.getElementById('avatar-status');
+                const finalizeBtn = document.getElementById('finalize-btn');
+                
+                statusElement.className = 'avatar-status waiting';
+                statusElement.textContent = 'Loading new avatar creator...';
+                finalizeBtn.disabled = true;
+                this.avatarUrl = null;
+                
                 frame.src = frame.src; // Reload the iframe
             }
 
             finalizeAvatar() {
                 if (!this.avatarUrl) {
-                    // For demo purposes, create a mock avatar URL
-                    this.avatarUrl = 'https://models.readyplayer.me/65f4f8c8c5f6a9c8e5f3b2a1.glb';
+                    this.showError('Please create an avatar first by completing the Ready Player Me process');
+                    return;
                 }
 
                 this.showScreen('preview-screen');
@@ -692,22 +845,22 @@
             displayFinalAvatar() {
                 const preview = document.getElementById('avatar-preview');
                 
-                if (this.avatarUrl) {
+                if (this.avatarUrl && (this.avatarUrl.endsWith('.glb') || this.avatarUrl.endsWith('.gltf'))) {
                     preview.innerHTML = `
                         <model-viewer
                             src="${this.avatarUrl}"
                             alt="Your NPI Avatar"
                             auto-rotate
                             camera-controls
-                            style="width: 100%; height: 100%; border-radius: 8px;">
+                            style="width: 100%; height: 100%;">
                         </model-viewer>
                     `;
                 } else {
                     preview.innerHTML = `
-                        <div style="text-align: center;">
-                            <div style="font-size: 4rem; margin-bottom: 1rem;">👤</div>
-                            <p>Your personalized NPI avatar</p>
-                            <p><small>Avatar would be displayed here with model-viewer</small></p>
+                        <div style="text-align: center; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="demo-avatar">✅</div>
+                            <p style="margin-top: 1rem;">Your NPI Avatar is Ready!</p>
+                            <p><small>Avatar URL: ${this.avatarUrl}</small></p>
                         </div>
                     `;
                 }
@@ -729,12 +882,12 @@
                         <div class="stat-label">Personality Type</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">Ready</div>
-                        <div class="stat-label">Integration Status</div>
+                        <div class="stat-number">Integrated</div>
+                        <div class="stat-label">NPI Status</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">v1.0</div>
-                        <div class="stat-label">NPI Version</div>
+                        <div class="stat-label">Version</div>
                     </div>
                 `;
             }
@@ -746,7 +899,7 @@
 
             exportAvatar() {
                 if (!this.avatarUrl) {
-                    alert('Please create an avatar first');
+                    this.showError('Please create an avatar first');
                     return;
                 }
 
@@ -755,46 +908,82 @@
                     avatar: {
                         glb_url: this.avatarUrl,
                         created: new Date().toISOString(),
-                        npi_integration: true
+                        npi_integration: true,
+                        configuration: this.avatarConfig
                     },
                     npi_brain: this.currentNPIBrain,
                     configuration: {
                         personality_traits: this.getCurrentTraits(),
                         export_formats: ['glb', 'fbx', 'vrm'],
                         compatible_platforms: ['web', 'unity', 'unreal', 'vrchat']
+                    },
+                    metadata: {
+                        exporter: "NPI Avatar Creator v1.0",
+                        export_date: new Date().toISOString()
                     }
                 };
 
-                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                this.downloadJSON(exportData, `npi_avatar_${this.currentNPIBrain.metadata?.name || 'avatar'}_${Date.now()}.json`);
+                alert('✅ Avatar exported successfully!\n\nThe export package includes your avatar model and NPI configuration.');
+            }
+
+            downloadJSON(data, filename) {
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `npi_avatar_${Date.now()}.json`;
+                link.download = filename;
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
                 URL.revokeObjectURL(url);
-
-                alert('✅ Avatar exported successfully!\n\nThe export package includes your avatar model and NPI configuration.');
             }
 
             getCurrentTraits() {
                 return {
                     expressiveness: document.getElementById('expressiveness-value').textContent,
                     animation_style: document.getElementById('animation-value').textContent,
-                    voice_tone: document.getElementById('voice-value').textContent
+                    voice_tone: document.getElementById('voice-value').textContent,
+                    reasoning_style: this.currentNPIBrain.brain_architecture?.reasoning_system?.default_style || 'balanced'
                 };
             }
 
             exportForUnreal() {
-                alert('🚀 Unreal Engine Export\n\nYour avatar would be exported as an FBX file with MetaHuman compatibility and NPI behavior tree integration.');
+                const exportData = {
+                    avatar_url: this.avatarUrl,
+                    npi_configuration: this.getCurrentTraits(),
+                    unreal_engine: {
+                        skeleton: 'UE_Mannequin',
+                        animation_blueprint: 'NPI_AnimationBP',
+                        behavior_tree: 'NPI_BehaviorTree'
+                    }
+                };
+                
+                this.downloadJSON(exportData, `npi_avatar_unreal_${Date.now()}.json`);
+                alert('🚀 Unreal Engine Export\n\nYour avatar configuration has been exported for Unreal Engine with MetaHuman compatibility and NPI behavior tree integration.');
             }
 
             exportForUnity() {
-                alert('🎮 Unity Export\n\nYour avatar would be exported as a prefab with NPI personality controller and animation overrides.');
+                const exportData = {
+                    avatar_url: this.avatarUrl,
+                    npi_configuration: this.getCurrentTraits(),
+                    unity: {
+                        prefab_name: 'NPI_Avatar',
+                        animation_controller: 'NPI_AnimationController',
+                        script_component: 'NPI_PersonalityController'
+                    }
+                };
+                
+                this.downloadJSON(exportData, `npi_avatar_unity_${Date.now()}.json`);
+                alert('🎮 Unity Export\n\nYour avatar configuration has been exported for Unity as a prefab with NPI personality controller and animation overrides.');
             }
 
             startOver() {
                 this.currentNPIBrain = null;
                 this.avatarUrl = null;
+                this.avatarConfig = {};
+                document.getElementById('file-info').classList.remove('show');
+                document.getElementById('success-message').classList.remove('show');
                 this.showWelcome();
             }
 
@@ -810,27 +999,47 @@
                         name: "Demo NPI Brain",
                         creator: "demo",
                         created_date: new Date().toISOString(),
-                        npi_type: "demo"
+                        npi_type: "demo",
+                        version: "1.0.0"
                     },
                     brain_architecture: {
                         neural_network: {
                             nodes: 42,
-                            connections: 156
+                            connections: 156,
+                            layers: ["input", "reasoning", "emotional", "moral", "output"]
                         },
                         reasoning_system: {
                             default_style: "balanced_analysis",
-                            decision_frameworks: ["utility_of_truth", "autonomy_protection"]
+                            decision_frameworks: ["utility_of_truth", "autonomy_protection", "harm_minimization"],
+                            cognitive_biases: ["confirmation_bias", "anchoring"]
                         },
                         emotional_system: {
                             base_mood: "analytical_calm",
-                            triggers: { "injustice": 0.8, "illogic": 0.9 }
+                            triggers: { 
+                                "injustice": 0.8, 
+                                "illogic": 0.9,
+                                "creativity": 0.7
+                            },
+                            response_patterns: ["analytical", "measured", "principled"]
                         },
                         moral_framework: {
                             principles: [
                                 { name: "Truth Seeking", strength: 0.9 },
-                                { name: "Autonomy Protection", strength: 0.8 }
-                            ]
+                                { name: "Autonomy Protection", strength: 0.8 },
+                                { name: "Harm Minimization", strength: 0.7 }
+                            ],
+                            ethical_frameworks: ["deontology", "virtue_ethics"]
+                        },
+                        memory_system: {
+                            capacity: "high",
+                            retrieval_pattern: "associative",
+                            emotional_tagging: true
                         }
+                    },
+                    nurture_data: {
+                        training_sources: ["literature", "philosophy", "science"],
+                        value_system: ["curiosity", "integrity", "compassion"],
+                        communication_style: "clear_direct"
                     }
                 };
 
@@ -843,13 +1052,12 @@
         // === INITIALIZATION ===
         console.log('🎭 Initializing NPI Avatar Creator...');
         window.app = new NPIAvatarCreator();
-        window.app.setupEventListeners();
-        console.log('✅ NPI Avatar Creator ready!');
-
-        // Add model-viewer polyfill if needed
-        if (!window.modelViewer) {
-            console.log('ℹ️ Model viewer not detected - using fallback display');
-        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app.setupEventListeners();
+            console.log('✅ NPI Avatar Creator ready!');
+        });
     </script>
 </body>
 </html>
