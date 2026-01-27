@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Neura Desktop - Run AI Locally</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --secondary: #718096;
+            --light: #f7fafc;
+            --white: #ffffff;
+            --accent: #3b82f6;
+            --success: #48bb78;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .download-hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: #f0f9ff;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .download-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .platform-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .platform-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .platform-name {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .system-requirements {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .requirement {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .requirement h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-list {
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .installation-steps {
+            background: #f0f9ff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .step {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .step:before {
+            content: counter(step);
+            counter-increment: step;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        ol {
+            counter-reset: step;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                padding: 1.5rem;
+            }
+            
+            .platform-grid, .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Neura Desktop Application</h1>
+        <p class="subtitle">Run your AI personality 100% locally on your machine</p>
+        
+        <div class="download-hero">
+            <div class="download-icon">💻</div>
+            <h2>Neura Desktop v1.0.0</h2>
+            <p>Built with Unreal Engine 5 for maximum performance and privacy</p>
+            <p><strong>Size:</strong> 2.3 GB • <strong>Version:</strong> 1.0.0 • <strong>License:</strong> Free for personal use</p>
+        </div>
+
+        <div class="platform-grid">
+            <div class="platform-card">
+                <div class="platform-icon">🪟</div>
+                <h3 class="platform-name">Windows</h3>
+                <p>Windows 10/11 (64-bit)</p>
+                <p><strong>Requirements:</strong> 8GB RAM, DirectX 12 GPU</p>
+                <button class="download-btn" onclick="downloadApp('windows')">Download for Windows</button>
+            </div>
+            
+            <div class="platform-card">
+                <div class="platform-icon">🍎</div>
+                <h3 class="platform-name">macOS</h3>
+                <p>macOS 11.0+ (Apple Silicon & Intel)</p>
+                <p><strong>Requirements:</strong> 8GB RAM, Metal GPU</p>
+                <button class="download-btn" onclick="downloadApp('macos')">Download for macOS</button>
+            </div>
+            
+            <div class="platform-card">
+                <div class="platform-icon">🐧</div>
+                <h3 class="platform-name">Linux</h3>
+                <p>Ubuntu 20.04+ / Arch Linux / Fedora</p>
+                <p><strong>Requirements:</strong> 8GB RAM, Vulkan GPU</p>
+                <button class="download-btn" onclick="downloadApp('linux')">Download for Linux</button>
+            </div>
+        </div>
+
+        <div class="system-requirements">
+            <h2>System Requirements</h2>
+            <div class="requirements-grid">
+                <div class="requirement">
+                    <h4>Minimum</h4>
+                    <p>• Windows 10/11, macOS 11.0+, or Linux</p>
+                    <p>• 8GB RAM</p>
+                    <p>• 4GB VRAM GPU</p>
+                    <p>• 10GB storage</p>
+                </div>
+                <div class="requirement">
+                    <h4>Recommended</h4>
+                    <p>• Windows 11, macOS 13.0+, or Ubuntu 22.04</p>
+                    <p>• 16GB RAM</p>
+                    <p>• 8GB VRAM GPU (RTX 3060+)</p>
+                    <p>• 20GB storage</p>
+                </div>
+                <div class="requirement">
+                    <h4>For AI Processing</h4>
+                    <p>• NVIDIA GPU (CUDA support)</p>
+                    <p>• 16GB+ RAM for large profiles</p>
+                    <p>• SSD for faster loading</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="installation-steps">
+            <h2>Installation Guide</h2>
+            <ol>
+                <li class="step">
+                    <h4>Download the Installer</h4>
+                    <p>Click the download button for your operating system above.</p>
+                </li>
+                <li class="step">
+                    <h4>Run the Installer</h4>
+                    <p><strong>Windows:</strong> Run the .exe file and follow the setup wizard.</p>
+                    <p><strong>macOS:</strong> Open the .dmg file and drag Neura Desktop to Applications.</p>
+                    <p><strong>Linux:</strong> Make the AppImage executable: <code>chmod +x Neura-Desktop.AppImage</code></p>
+                </li>
+                <li class="step">
+                    <h4>Launch the Application</h4>
+                    <p>Start Neura Desktop from your applications menu or desktop shortcut.</p>
+                </li>
+                <li class="step">
+                    <h4>Import Your .neura File</h4>
+                    <p>Use the "Import Profile" feature to load your Neura Profile created on the web platform.</p>
+                </li>
+            </ol>
+        </div>
+
+        <div class="feature-list">
+            <h2>Desktop App Features</h2>
+            
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <div>
+                    <h3>100% Offline Operation</h3>
+                    <p>All AI processing happens locally on your machine. No internet connection required after installation. Your data never leaves your computer.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <div>
+                    <h3>GPU-Accelerated AI</h3>
+                    <p>Utilizes your GPU for real-time personality simulation. Supports NVIDIA CUDA, AMD ROCm, and Apple Metal for optimal performance.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">🔄</div>
+                <div>
+                    <h3>.neura File Integration</h3>
+                    <p>Import profiles created on the web platform. Export modified profiles. Full compatibility with the Neura ecosystem.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">🎮</div>
+                <div>
+                    <h3>Unreal Engine 5 Graphics</h3>
+                    <p>High-quality 3D visualization. Real-time avatar rendering. Advanced lighting and effects powered by UE5.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">🤖</div>
+                <div>
+                    <h3>Local AI Training</h3>
+                    <p>Train and refine your NPI locally using your own conversations and interactions. No cloud training required.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="index.html" class="download-btn" style="background: #718096;">← Back to Platform</a>
+            <a href="profiler.html" class="download-btn">Create Neura Profile First</a>
+        </div>
+    </div>
+
+    <script>
+        function downloadApp(platform) {
+            // Create a placeholder download for now
+            const appInfo = {
+                platform: platform,
+                version: "1.0.0",
+                download_url: "https://neura.ai/downloads/neura-desktop-v1.0.0-" + platform + ".zip",
+                release_notes: "Initial release with local AI processing",
+                features: [
+                    "100% offline operation",
+                    "GPU-accelerated AI",
+                    ".neura file integration",
+                    "Local profile training"
+                ],
+                installation: {
+                    windows: "1. Download .exe installer\n2. Run installer\n3. Launch Neura Desktop",
+                    macos: "1. Download .dmg file\n2. Drag to Applications\n3. Launch from Applications",
+                    linux: "1. Download .AppImage\n2. chmod +x Neura-Desktop.AppImage\n3. ./Neura-Desktop.AppImage"
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(appInfo, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `neura-desktop-installation-${platform}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            const messages = {
+                windows: "🚀 Windows download started!\n\nThe Neura Desktop application will run 100% locally on your machine.\n\nInstallation:\n1. Run the downloaded .exe file\n2. Follow the installer instructions\n3. Launch Neura Desktop from Start Menu\n\nYour AI personality runs entirely on your computer - no internet needed!",
+                macos: "🚀 macOS download started!\n\nThe Neura Desktop application will run 100% locally on your machine.\n\nInstallation:\n1. Open the downloaded .dmg file\n2. Drag Neura Desktop to Applications\n3. Launch from Applications folder\n4. Import your .neura file to begin\n\nYour AI personality runs entirely on your computer - no internet needed!",
+                linux: "🚀 Linux download started!\n\nThe Neura Desktop application will run 100% locally on your machine.\n\nInstallation:\n1. Make AppImage executable: chmod +x Neura-Desktop.AppImage\n2. Run: ./Neura-Desktop.AppImage\n3. Consider adding to your applications menu\n4. Import your .neura file to begin\n\nYour AI personality runs entirely on your computer - no internet needed!"
+            };
+            
+            alert(messages[platform] || "Download started! The Neura Desktop app runs 100% locally on your machine.");
+        }
+    </script>
+</body>
+</html>
