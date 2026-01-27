@@ -360,14 +360,14 @@
             font-weight: 600;
         }
 
-        .npi-details {
+        .neura-details {
             background: #f7fafc;
             padding: 1.5rem;
             border-radius: 8px;
             margin-top: 1rem;
         }
 
-        .npi-details p {
+        .neura-details p {
             margin: 0.5rem 0;
             color: #4a5568;
         }
@@ -397,6 +397,25 @@
             background: #fef3c7;
             color: #92400e;
             border: 1px solid #fde68a;
+        }
+
+        .desktop-integration {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .desktop-integration h3 {
+            color: #0369a1;
+            margin-bottom: 1rem;
+        }
+
+        .desktop-integration p {
+            color: #475569;
+            margin-bottom: 1.5rem;
         }
 
         @media (max-width: 768px) {
@@ -450,6 +469,14 @@
                     <p>This guided process will help build a digital brain based on your life experiences, personality, and values.</p>
                     <p><strong>Time required:</strong> 30-45 minutes</p>
                     <p><strong>Questions:</strong> 47 comprehensive questions about your life and personality</p>
+                    
+                    <div class="desktop-integration">
+                        <h3>💻 Desktop Application Integration</h3>
+                        <p>After completing your Neura Profile, download our desktop application to run your AI personality 100% locally on your machine.</p>
+                        <p><strong>Features:</strong> Local AI processing • No internet required • GPU acceleration • Complete privacy</p>
+                        <button class="btn-secondary" onclick="window.open('download.html', '_blank')">Learn About Desktop App</button>
+                    </div>
+                    
                     <button id="start-btn" class="btn-primary" onclick="window.startQuestionnaire()">Begin Creation</button>
                 </div>
             </div>
@@ -518,13 +545,13 @@
         <div id="export-screen" class="screen">
             <div class="container">
                 <h2>Your Neura Profile is Ready!</h2>
-                <div class="npi-summary">
-                    <div id="npi-stats"></div>
+                <div class="neura-summary">
+                    <div id="neura-stats"></div>
                     <div id="brain-visualization"></div>
                 </div>
                 <div class="export-options">
                     <button id="export-btn" class="btn-primary" onclick="app.exportNeuraProfile()">Download .neura File</button>
-                    <button id="avatar-btn" class="btn-secondary" onclick="app.showAvatarMessage()">Continue to Avatar Creator</button>
+                    <button id="desktop-btn" class="btn-secondary" onclick="app.showDesktopAppMessage()">Run in Desktop App</button>
                     <button id="library-btn" class="btn-secondary" onclick="app.saveToLibrary()">Save to Neura Library</button>
                 </div>
             </div>
@@ -1013,17 +1040,11 @@
                             value_hierarchy: ["autonomy", "truth", "justice"]
                         }
                     },
-                    avatar_compatibility: {
-                        supported_platforms: ["unreal_metahuman", "unity", "web_avatar"],
-                        expression_map: {
-                            thinking: "focused_contemplation",
-                            speaking: "direct_communication"
-                        },
-                        voice_profile: {
-                            pace: "measured",
-                            tone: "analytical",
-                            emotional_range: "controlled"
-                        }
+                    desktop_compatibility: {
+                        supported_platforms: ["windows", "macos", "linux"],
+                        local_processing: true,
+                        offline_capable: true,
+                        gpu_acceleration: true
                     }
                 };
             }
@@ -1054,7 +1075,7 @@
             }
 
             renderCompleteSummary() {
-                const statsContainer = document.getElementById('npi-stats');
+                const statsContainer = document.getElementById('neura-stats');
                 
                 if (!this.neuraProfile) {
                     statsContainer.innerHTML = '<p>Error generating Neura profile.</p>';
@@ -1081,7 +1102,7 @@
                                 <div class="stat-label">Core Principles</div>
                             </div>
                         </div>
-                        <div class="npi-details">
+                        <div class="neura-details">
                             <p><strong>Reasoning Style:</strong> ${this.neuraProfile.brain_architecture.reasoning_system.default_style.replace(/_/g, ' ')}</p>
                             <p><strong>Base Mood:</strong> ${this.neuraProfile.brain_architecture.emotional_system.base_mood.replace(/_/g, ' ')}</p>
                             <p><strong>Progress:</strong> ${responses}/${totalQuestions} questions completed</p>
@@ -1119,10 +1140,10 @@
                 userLibrary.unshift(profileRecord);
                 auth.saveUserLibrary(userLibrary);
                 
-                alert('✅ Your Neura Profile has been saved to your personal library!\n\nYou can now access it from the Neura Library to create avatars or make changes.');
+                alert('✅ Your Neura Profile has been saved to your personal library!\n\nDownload our desktop app to run this AI personality 100% locally on your machine.');
             }
 
-            // === ENHANCED: Export with user context ===
+            // === ENHANCED: Export with desktop app integration ===
             exportNeuraProfile() {
                 if (!this.neuraProfile) {
                     alert('Please complete the questionnaire first.');
@@ -1139,19 +1160,18 @@
                 
                 if (auth.isAuthenticated()) {
                     this.saveToLibrary();
-                    alert('✅ Your Neura Profile has been exported and saved to your personal library!');
+                    alert('✅ Your Neura Profile has been exported and saved!\n\nDownload our desktop app to run this AI personality 100% locally on your machine.');
                 } else {
-                    alert('✅ Your Neura Profile has been exported!\n\nSign in to save it to your personal library.');
-                }
-            }
-
-            // === ENHANCED: Save to library before showing avatar message ===
-            showAvatarMessage() {
-                if (auth.isAuthenticated() && this.neuraProfile) {
-                    this.saveToLibrary();
+                    alert('✅ Your Neura Profile has been exported!\n\nDownload our desktop app to run this AI personality 100% locally on your machine.');
                 }
                 
-                alert('🎭 Avatar Creator - Ready!\n\nYour Neura Profile has been saved. You can now:\n\n1. Open the Avatar Creator\n2. Click "Load from Neura Library"\n3. Select your profile to create an avatar!');
+                // Show desktop app info
+                this.showDesktopAppMessage();
+            }
+
+            // === NEW: Desktop app integration message ===
+            showDesktopAppMessage() {
+                alert('💻 Neura Desktop Application\n\nYour .neura file is ready! To run your AI personality locally:\n\n1. Download our desktop app from the download page\n2. Install it on your computer (Windows, macOS, or Linux)\n3. Import this .neura file\n4. Your AI runs 100% locally with no internet needed!\n\nFeatures:\n• Complete offline operation\n• GPU acceleration\n• Local training and refinement\n• Maximum privacy and security');
             }
 
             delay(ms) {
