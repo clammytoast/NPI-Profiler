@@ -13,14 +13,12 @@
         }
 
         :root {
-            --primary: #4a5568;
-            --primary-dark: #2d3748;
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
             --secondary: #718096;
             --light: #f7fafc;
             --white: #ffffff;
-            --accent: #667eea;
-            --neura-purple: #7c3aed;
-            --neura-blue: #3b82f6;
+            --accent: #3b82f6;
             --success: #48bb78;
             --error: #e53e3e;
         }
@@ -65,7 +63,7 @@
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: var(--neura-purple);
+            color: var(--primary);
             text-decoration: none;
         }
 
@@ -83,7 +81,7 @@
         }
 
         .nav-link:hover {
-            color: var(--neura-purple);
+            color: var(--primary-dark);
         }
 
         .nav-actions {
@@ -106,12 +104,12 @@
         }
 
         .btn-primary {
-            background: var(--neura-purple);
+            background: var(--primary);
             color: var(--white);
         }
 
         .btn-primary:hover {
-            background: var(--neura-blue);
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
@@ -127,7 +125,7 @@
         }
 
         .btn-accent {
-            background: var(--neura-blue);
+            background: var(--accent);
             color: var(--white);
         }
 
@@ -137,7 +135,7 @@
         }
 
         .hero {
-            background: linear-gradient(135deg, var(--neura-purple) 0%, var(--neura-blue) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: var(--white);
             padding: 120px 0 80px;
             text-align: center;
@@ -243,7 +241,7 @@
         .step-number {
             width: 60px;
             height: 60px;
-            background: var(--neura-purple);
+            background: var(--primary);
             color: var(--white);
             border-radius: 50%;
             display: flex;
@@ -252,6 +250,11 @@
             font-size: 1.5rem;
             font-weight: bold;
             margin: 0 auto 1.5rem;
+        }
+
+        .local-processing {
+            padding: 80px 0;
+            background: #f0f9ff;
         }
 
         .cta-section {
@@ -305,7 +308,7 @@
 
         .form-input:focus {
             outline: none;
-            border-color: var(--neura-purple);
+            border-color: var(--primary);
         }
 
         .form-error {
@@ -352,7 +355,7 @@
             background: var(--white);
             padding: 2.5rem;
             border-radius: 12px;
-            border-left: 4px solid var(--neura-purple);
+            border-left: 4px solid var(--primary);
             transition: all 0.3s ease;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -445,10 +448,6 @@
         .mb-2 { margin-bottom: 2rem; }
         .my-2 { margin: 2rem 0; }
 
-        .hidden {
-            display: none;
-        }
-
         .loading {
             display: none;
             text-align: center;
@@ -461,7 +460,7 @@
 
         .spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--neura-purple);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -481,8 +480,8 @@
             <a href="#" class="logo" onclick="app.showScreen('landing-screen')">Neura</a>
             <div class="nav-links">
                 <a href="#" class="nav-link" onclick="app.showScreen('landing-screen')">Home</a>
-                <a href="#" class="nav-link" onclick="app.showScreen('about-screen')">About</a>
                 <a href="#" class="nav-link" onclick="app.showScreen('tools-screen')">Tools</a>
+                <a href="download.html" class="nav-link">Download</a>
                 <div class="nav-actions" id="nav-actions">
                     <!-- Auth buttons will be populated here -->
                 </div>
@@ -495,10 +494,10 @@
         <section class="hero">
             <div class="container">
                 <h1>Create Your Digital Mind</h1>
-                <p>Neura Profile Intelligence (NPI) - Build AI personalities based on your unique experiences, values, and reasoning patterns.</p>
+                <p>Neura Profile Intelligence (NPI) - Build AI personalities that run 100% locally on your machine.</p>
                 <div class="hero-actions">
                     <button class="btn btn-accent" onclick="app.showScreen('register-screen')">Start Free</button>
-                    <button class="btn btn-secondary" onclick="app.showScreen('about-screen')">Learn More</button>
+                    <button class="btn btn-secondary" onclick="app.downloadDesktopApp()">Download Desktop App</button>
                 </div>
             </div>
         </section>
@@ -507,23 +506,49 @@
             <div class="container">
                 <div class="section-title">
                     <h2>Why Create a Digital Mind?</h2>
-                    <p>Neura technology allows you to build AI companions that truly understand your perspective and values.</p>
+                    <p>Neura technology allows you to build AI personalities that work entirely on your computer.</p>
                 </div>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon">🧠</div>
-                        <h3>Personalized AI</h3>
-                        <p>Create AI that thinks like you, understands your values, and respects your unique perspective.</p>
+                        <div class="feature-icon">💻</div>
+                        <h3>100% Local Processing</h3>
+                        <p>Your Neura Profiles run entirely on your machine. No cloud dependencies, complete privacy.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">👤</div>
-                        <h3>Digital Avatars</h3>
-                        <p>Bring your NPI to life with customizable 3D avatars using Ready Player Me integration.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🛡️</div>
+                        <div class="feature-icon">🔒</div>
                         <h3>Complete Privacy</h3>
-                        <p>Your NPI data stays private and secure. You control who has access to your digital mind.</p>
+                        <p>Your personality data never leaves your computer. Full offline functionality.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Native Performance</h3>
+                        <p>Unreal Engine 5 provides real-time AI processing with GPU acceleration.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="local-processing">
+            <div class="container">
+                <div class="section-title">
+                    <h2>How Local NPI Works</h2>
+                    <p>Your AI personality runs entirely on your hardware</p>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Create Profile Online</h3>
+                        <p>Use our web profiler to create your .neura personality file</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Download Desktop App</h3>
+                        <p>Get our free Unreal Engine-based desktop application</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Run Locally</h3>
+                        <p>Import your .neura file and run AI personality 100% offline</p>
                     </div>
                 </div>
             </div>
@@ -543,13 +568,13 @@
                     </div>
                     <div class="step">
                         <div class="step-number">2</div>
-                        <h3>Create Your NPI</h3>
-                        <p>Generate your unique Neura Profile Intelligence based on your responses.</p>
+                        <h3>Create Your .neura File</h3>
+                        <p>Generate your unique Neura Profile file containing your complete personality data.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">3</div>
-                        <h3>Bring to Life</h3>
-                        <p>Create a 3D avatar and configure it with your NPI's personality traits.</p>
+                        <h3>Run Locally</h3>
+                        <p>Download our desktop app and run your AI personality 100% on your own machine.</p>
                     </div>
                 </div>
             </div>
@@ -564,50 +589,6 @@
         </section>
     </div>
 
-    <!-- About Screen -->
-    <div id="about-screen" class="screen">
-        <div class="container" style="margin-top: 100px; padding: 2rem 0;">
-            <div class="tool-header">
-                <h1>About Neura Technology</h1>
-                <p>Understanding Neura Profile Intelligence and its applications</p>
-            </div>
-            
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h2>What is Neura?</h2>
-                <p style="margin-bottom: 2rem;">Neura Profile Intelligence (NPI) is a revolutionary approach to AI personality creation that focuses on modeling human-like reasoning based on lived experiences, values, and developmental patterns.</p>
-
-                <h2>Key Features</h2>
-                <div style="margin: 2rem 0;">
-                    <h3>🧠 Experience-Based Reasoning</h3>
-                    <p>NPIs reason from foundational memories and experiences, not just abstract rules.</p>
-                    
-                    <h3>💡 Moral Compass Integration</h3>
-                    <p>Each NPI develops its own ethical framework based on the user's values and principles.</p>
-                    
-                    <h3>🎭 Personality Consistency</h3>
-                    <p>Maintains consistent personality traits across different contexts and interactions.</p>
-                    
-                    <h3>🚀 Growth-Oriented</h3>
-                    <p>NPIs can learn and evolve while maintaining core identity principles.</p>
-                </div>
-
-                <h2>Use Cases</h2>
-                <ul style="margin: 2rem 0 2rem 2rem;">
-                    <li>Personal AI assistants that truly understand you</li>
-                    <li>Digital legacy and memory preservation</li>
-                    <li>Educational companions with personalized teaching styles</li>
-                    <li>Therapeutic tools for self-reflection and growth</li>
-                    <li>Creative collaboration with AI that shares your aesthetic</li>
-                </ul>
-
-                <div class="text-center mt-2">
-                    <button class="btn btn-primary" onclick="app.showScreen('tools-screen')">Explore Tools</button>
-                    <button class="btn btn-secondary" onclick="app.showScreen('landing-screen')">Back to Home</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Tools Screen -->
     <div id="tools-screen" class="screen">
         <div class="container" style="margin-top: 100px; padding: 2rem 0;">
@@ -619,26 +600,26 @@
             <div class="dashboard-grid">
                 <div class="dashboard-card" onclick="app.launchProfiler()">
                     <div class="card-icon">📊</div>
-                    <div class="card-title">NPI Profiler</div>
+                    <div class="card-title">Neura Profiler</div>
                     <div class="card-description">Complete the comprehensive questionnaire to build your NPI foundation. Map your personality, values, and reasoning patterns.</div>
                 </div>
                 
-                <div class="dashboard-card" onclick="app.launchAvatarCreator()">
-                    <div class="card-icon">👤</div>
-                    <div class="card-title">Avatar Creator</div>
-                    <div class="card-description">Bring your NPIs to life with Ready Player Me. Create 3D avatars configured with your NPI's personality traits.</div>
+                <div class="dashboard-card" onclick="app.downloadDesktopApp()">
+                    <div class="card-icon">💻</div>
+                    <div class="card-title">Desktop Application</div>
+                    <div class="card-description">Download our Unreal Engine desktop app to run your Neura Profiles 100% locally on your machine.</div>
                 </div>
                 
                 <div class="dashboard-card" onclick="app.launchLibrary()">
                     <div class="card-icon">📚</div>
-                    <div class="card-title">NPI Library</div>
+                    <div class="card-title">Neura Library</div>
                     <div class="card-description">Manage your digital minds, create new NPIs, and organize your personality profiles in your personal library.</div>
                 </div>
                 
-                <div class="dashboard-card" onclick="app.showScreen('about-screen')">
+                <div class="dashboard-card" onclick="app.showDocumentation()">
                     <div class="card-icon">📖</div>
                     <div class="card-title">Documentation</div>
-                    <div class="card-description">Learn about NPI technology, best practices, and advanced features for creating sophisticated digital minds.</div>
+                    <div class="card-description">Learn about Neura technology, best practices, and how to use the desktop application.</div>
                 </div>
             </div>
 
@@ -726,15 +707,15 @@
                     <div class="card-description">Build a new digital mind using our comprehensive profiler questionnaire.</div>
                 </div>
                 
-                <div class="dashboard-card" onclick="app.launchAvatarCreator()">
-                    <div class="card-icon">👤</div>
-                    <div class="card-title">Avatar Studio</div>
-                    <div class="card-description">Create and customize 3D avatars for your existing NPIs.</div>
+                <div class="dashboard-card" onclick="app.downloadDesktopApp()">
+                    <div class="card-icon">💻</div>
+                    <div class="card-title">Download Desktop App</div>
+                    <div class="card-description">Get our Unreal Engine desktop application to run NPIs locally on your machine.</div>
                 </div>
                 
                 <div class="dashboard-card" onclick="app.launchLibrary()">
                     <div class="card-icon">📚</div>
-                    <div class="card-title">My NPI Library</div>
+                    <div class="card-title">My Neura Library</div>
                     <div class="card-description">Manage your digital minds and view their profiles.</div>
                 </div>
                 
@@ -788,7 +769,6 @@
                     }
                 } else {
                     navActions.innerHTML = `
-                        <span style="color: var(--secondary); margin-right: 1rem;">Guest User</span>
                         <button class="btn btn-secondary" onclick="app.showScreen('login-screen')">Sign In</button>
                         <button class="btn btn-primary" onclick="app.showScreen('register-screen')">Sign Up</button>
                     `;
@@ -897,28 +877,52 @@
             launchProfiler() {
                 if (!this.currentUser) {
                     this.showScreen('login-screen');
-                    this.showError('Please sign in to create NPIs');
                     return;
                 }
                 window.open('profiler.html', '_blank');
             }
 
-            launchAvatarCreator() {
-                if (!this.currentUser) {
-                    this.showScreen('login-screen');
-                    this.showError('Please sign in to create avatars');
-                    return;
-                }
-                window.open('avatar.html', '_blank');
+            downloadDesktopApp() {
+                window.open('download.html', '_blank');
             }
 
             launchLibrary() {
                 if (!this.currentUser) {
                     this.showScreen('login-screen');
-                    this.showError('Please sign in to access your library');
                     return;
                 }
                 window.open('library.html', '_blank');
+            }
+
+            showDocumentation() {
+                const docs = `
+                    NEURA PLATFORM DOCUMENTATION
+                    ============================
+                    
+                    1. CREATING PROFILES
+                       - Use the Neura Profiler tool
+                       - Answer 47 comprehensive questions
+                       - Export as .neura file
+                    
+                    2. DESKTOP APPLICATION
+                       - Download from download.html
+                       - Install on Windows, macOS, or Linux
+                       - Import .neura files
+                       - Runs 100% locally on your machine
+                    
+                    3. LIBRARY MANAGEMENT
+                       - Save profiles to your personal library
+                       - Organize multiple NPIs
+                       - Export for backup or sharing
+                    
+                    4. PRIVACY FEATURES
+                       - All processing happens locally
+                       - No cloud storage of personal data
+                       - Complete offline functionality
+                    
+                    For more help, contact: support@neura.ai
+                `;
+                alert(docs);
             }
 
             showError(elementId, message) {
