@@ -107,14 +107,6 @@ class AuthSystem {
         }
     }
 
-    verifyNPIOwnership(npiId) {
-        const user = this.getCurrentUser();
-        if (!user) return false;
-
-        const userLibrary = this.getUserLibrary();
-        return userLibrary.some(npi => npi.id === npiId);
-    }
-
     getUserStorageKey(key) {
         const user = this.getCurrentUser();
         if (!user) return key;
