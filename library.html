@@ -131,14 +131,14 @@
             gap: 1rem;
         }
 
-        .npi-grid {
+        .neura-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
             margin: 2rem 0;
         }
 
-        .npi-card {
+        .neura-card {
             background: var(--white);
             border-radius: 12px;
             padding: 1.5rem;
@@ -147,27 +147,27 @@
             position: relative;
         }
 
-        .npi-card:hover {
+        .neura-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border-color: var(--accent);
         }
 
-        .npi-card-header {
+        .neura-card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 1rem;
         }
 
-        .npi-name {
+        .neura-name {
             font-size: 1.3rem;
             font-weight: bold;
             color: var(--primary);
             margin: 0;
         }
 
-        .npi-type {
+        .neura-type {
             background: var(--light);
             color: var(--secondary);
             padding: 4px 8px;
@@ -176,7 +176,7 @@
             font-weight: 600;
         }
 
-        .npi-stats {
+        .neura-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 0.5rem;
@@ -201,7 +201,7 @@
             color: var(--secondary);
         }
 
-        .npi-traits {
+        .neura-traits {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
@@ -216,7 +216,7 @@
             font-size: 0.8rem;
         }
 
-        .npi-actions {
+        .neura-actions {
             display: flex;
             gap: 0.5rem;
             margin-top: 1rem;
@@ -224,7 +224,7 @@
             border-top: 1px solid #e2e8f0;
         }
 
-        .npi-action-btn {
+        .neura-action-btn {
             flex: 1;
             padding: 8px 12px;
             border: none;
@@ -287,7 +287,7 @@
             display: none;
         }
 
-        .npi-detail-view {
+        .neura-detail-view {
             background: var(--white);
             border-radius: 12px;
             padding: 2rem;
@@ -367,6 +367,15 @@
             font-size: 0.9rem;
         }
 
+        .desktop-integration-card {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 0;
@@ -379,7 +388,7 @@
                 text-align: center;
             }
             
-            .npi-grid {
+            .neura-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -387,7 +396,7 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .npi-actions {
+            .neura-actions {
                 flex-direction: column;
             }
         }
@@ -462,7 +471,7 @@
                     <div class="library-actions">
                         <button class="btn-primary" onclick="app.showScreen('create-screen')">Create New Profile</button>
                         <button class="btn-secondary" onclick="app.showScreen('import-screen')">Import Profile</button>
-                        <button class="btn-success" onclick="app.exportAllNPIs()">Export All</button>
+                        <button class="btn-success" onclick="app.exportAllProfiles()">Export All</button>
                     </div>
                 </div>
 
@@ -471,10 +480,16 @@
                     <button class="btn-primary" onclick="window.location.href='index.html'">Sign In to Neura</button>
                 </div>
 
+                <div class="desktop-integration-card">
+                    <h3>💻 Run Profiles Locally</h3>
+                    <p>Download our desktop application to run your Neura Profiles 100% locally on your machine.</p>
+                    <button class="btn-primary" onclick="window.open('download.html', '_blank')">Download Desktop App</button>
+                </div>
+
                 <div class="success-message" id="success-message"></div>
                 <div class="error-message" id="error-message"></div>
 
-                <div id="npi-grid-container">
+                <div id="neura-grid-container">
                     <!-- Profile cards will be populated here -->
                 </div>
 
@@ -492,14 +507,14 @@
                 <h1>Create New Neura Profile</h1>
                 <p class="subtitle">Choose how you want to create your digital mind</p>
 
-                <div class="npi-grid">
-                    <div class="npi-card" onclick="app.launchProfiler()" style="cursor: pointer;">
-                        <div class="npi-card-header">
-                            <h3 class="npi-name">Complete Profiler</h3>
-                            <span class="npi-type">Recommended</span>
+                <div class="neura-grid">
+                    <div class="neura-card" onclick="app.launchProfiler()" style="cursor: pointer;">
+                        <div class="neura-card-header">
+                            <h3 class="neura-name">Complete Profiler</h3>
+                            <span class="neura-type">Recommended</span>
                         </div>
                         <p>Use our comprehensive 47-question profiler to build a detailed profile based on your personality, values, and experiences.</p>
-                        <div class="npi-stats">
+                        <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">47</div>
                                 <div class="stat-label">Questions</div>
@@ -515,13 +530,13 @@
                         </div>
                     </div>
 
-                    <div class="npi-card" onclick="app.createQuickProfile()" style="cursor: pointer;">
-                        <div class="npi-card-header">
-                            <h3 class="npi-name">Quick Setup</h3>
-                            <span class="npi-type">Basic</span>
+                    <div class="neura-card" onclick="app.createQuickProfile()" style="cursor: pointer;">
+                        <div class="neura-card-header">
+                            <h3 class="neura-name">Quick Setup</h3>
+                            <span class="neura-type">Basic</span>
                         </div>
                         <p>Create a basic profile with essential personality traits for quick testing and development.</p>
-                        <div class="npi-stats">
+                        <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">5</div>
                                 <div class="stat-label">Minutes</div>
@@ -537,13 +552,13 @@
                         </div>
                     </div>
 
-                    <div class="npi-card" onclick="app.createFromTemplate('analytical')" style="cursor: pointer;">
-                        <div class="npi-card-header">
-                            <h3 class="npi-name">Analytical Thinker</h3>
-                            <span class="npi-type">Template</span>
+                    <div class="neura-card" onclick="app.createFromTemplate('analytical')" style="cursor: pointer;">
+                        <div class="neura-card-header">
+                            <h3 class="neura-name">Analytical Thinker</h3>
+                            <span class="neura-type">Template</span>
                         </div>
                         <p>Start with a logical, data-driven personality template perfect for analytical tasks and reasoning.</p>
-                        <div class="npi-stats">
+                        <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">🧠</div>
                                 <div class="stat-label">Logical</div>
@@ -559,13 +574,13 @@
                         </div>
                     </div>
 
-                    <div class="npi-card" onclick="app.createFromTemplate('creative')" style="cursor: pointer;">
-                        <div class="npi-card-header">
-                            <h3 class="npi-name">Creative Explorer</h3>
-                            <span class="npi-type">Template</span>
+                    <div class="neura-card" onclick="app.createFromTemplate('creative')" style="cursor: pointer;">
+                        <div class="neura-card-header">
+                            <h3 class="neura-name">Creative Explorer</h3>
+                            <span class="neura-type">Template</span>
                         </div>
                         <p>Begin with an imaginative, innovative personality ideal for creative projects and brainstorming.</p>
-                        <div class="npi-stats">
+                        <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">🎨</div>
                                 <div class="stat-label">Creative</div>
@@ -622,7 +637,7 @@
             <div class="container">
                 <button class="back-button" onclick="app.showScreen('library-screen')">← Back to Library</button>
                 
-                <div id="npi-detail-content">
+                <div id="neura-detail-content">
                     <!-- Profile details will be populated here -->
                 </div>
             </div>
@@ -765,7 +780,7 @@
 
             // === RENDERING ===
             renderLibrary() {
-                const container = document.getElementById('npi-grid-container');
+                const container = document.getElementById('neura-grid-container');
                 
                 if (this.profiles.length === 0) {
                     container.innerHTML = `
@@ -783,13 +798,13 @@
                 }
 
                 container.innerHTML = this.profiles.map(profile => `
-                    <div class="npi-card">
-                        <div class="npi-card-header">
-                            <h3 class="npi-name">${profile.name}</h3>
-                            <span class="npi-type">${profile.type}</span>
+                    <div class="neura-card">
+                        <div class="neura-card-header">
+                            <h3 class="neura-name">${profile.name}</h3>
+                            <span class="neura-type">${profile.type}</span>
                         </div>
                         
-                        <div class="npi-stats">
+                        <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">${profile.stats.nodes}</div>
                                 <div class="stat-label">Nodes</div>
@@ -804,7 +819,7 @@
                             </div>
                         </div>
 
-                        <div class="npi-traits">
+                        <div class="neura-traits">
                             ${profile.stats.traits.slice(0, 3).map(trait => `
                                 <span class="trait">${trait}</span>
                             `).join('')}
@@ -815,11 +830,11 @@
                             Created: ${new Date(profile.created).toLocaleDateString()}
                         </p>
 
-                        <div class="npi-actions">
-                            <button class="npi-action-btn action-primary" onclick="app.viewProfile('${profile.id}')">View</button>
-                            <button class="npi-action-btn action-secondary" onclick="app.exportProfile('${profile.id}')">Export</button>
-                            <button class="npi-action-btn action-secondary" onclick="app.launchAvatarCreator('${profile.id}')">Avatar</button>
-                            <button class="npi-action-btn action-danger" onclick="app.deleteProfile('${profile.id}')">Delete</button>
+                        <div class="neura-actions">
+                            <button class="neura-action-btn action-primary" onclick="app.viewProfile('${profile.id}')">View</button>
+                            <button class="neura-action-btn action-secondary" onclick="app.exportProfile('${profile.id}')">Export .neura</button>
+                            <button class="neura-action-btn action-secondary" onclick="app.openDesktopWithProfile('${profile.id}')">Run Locally</button>
+                            <button class="neura-action-btn action-danger" onclick="app.deleteProfile('${profile.id}')">Delete</button>
                         </div>
                     </div>
                 `).join('');
@@ -829,7 +844,7 @@
                 const profile = this.getProfile(id);
                 if (!profile) return;
 
-                const container = document.getElementById('npi-detail-content');
+                const container = document.getElementById('neura-detail-content');
                 container.innerHTML = `
                     <div class="detail-header">
                         <div>
@@ -837,8 +852,8 @@
                             <p class="subtitle">${profile.type} • Created ${new Date(profile.created).toLocaleDateString()}</p>
                         </div>
                         <div style="display: flex; gap: 1rem;">
-                            <button class="btn-primary" onclick="app.exportProfile('${profile.id}')">Export</button>
-                            <button class="btn-secondary" onclick="app.launchAvatarCreator('${profile.id}')">Create Avatar</button>
+                            <button class="btn-primary" onclick="app.exportProfile('${profile.id}')">Export .neura</button>
+                            <button class="btn-secondary" onclick="app.openDesktopWithProfile('${profile.id}')">Run in Desktop App</button>
                             <button class="btn-danger" onclick="app.deleteProfile('${profile.id}')">Delete</button>
                         </div>
                     </div>
@@ -864,7 +879,7 @@
 
                     <div class="detail-section">
                         <h3>Personality Traits</h3>
-                        <div class="npi-traits">
+                        <div class="neura-traits">
                             ${profile.stats.traits.map(trait => `
                                 <span class="trait">${trait}</span>
                             `).join('')}
@@ -886,6 +901,14 @@
                                 `).join('')}
                             </ul>
                         ` : '<p>No principles defined</p>'}
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Desktop Compatibility</h3>
+                        <p><strong>Local Processing:</strong> ${profile.data.desktop_compatibility?.local_processing ? '✅ Yes' : '❌ No'}</p>
+                        <p><strong>Offline Capable:</strong> ${profile.data.desktop_compatibility?.offline_capable ? '✅ Yes' : '❌ No'}</p>
+                        <p><strong>GPU Acceleration:</strong> ${profile.data.desktop_compatibility?.gpu_acceleration ? '✅ Yes' : '❌ No'}</p>
+                        <p><strong>Platforms:</strong> ${profile.data.desktop_compatibility?.supported_platforms?.join(', ') || 'Windows, macOS, Linux'}</p>
                     </div>
 
                     <div class="detail-section">
@@ -983,7 +1006,7 @@
                 link.click();
                 URL.revokeObjectURL(url);
                 
-                this.showSuccess(`Neura Profile "${profile.name}" exported successfully!`);
+                this.showSuccess(`Neura Profile "${profile.name}" exported!\n\nDownload our desktop app to run this profile 100% locally.`);
             }
 
             exportAllProfiles() {
@@ -1007,7 +1030,7 @@
                 link.click();
                 URL.revokeObjectURL(url);
                 
-                this.showSuccess(`Exported ${this.profiles.length} profiles successfully!`);
+                this.showSuccess(`Exported ${this.profiles.length} profiles successfully!\n\nDownload our desktop app to run these profiles 100% locally.`);
             }
 
             // === CREATION METHODS ===
@@ -1054,6 +1077,12 @@
                                 { name: "Personal Growth", strength: 0.6 }
                             ]
                         }
+                    },
+                    desktop_compatibility: {
+                        supported_platforms: ["windows", "macos", "linux"],
+                        local_processing: true,
+                        offline_capable: true,
+                        gpu_acceleration: true
                     }
                 };
 
@@ -1113,6 +1142,12 @@
                                 { name: "Innovation", strength: 0.7 }
                             ]
                         }
+                    },
+                    desktop_compatibility: {
+                        supported_platforms: ["windows", "macos", "linux"],
+                        local_processing: true,
+                        offline_capable: true,
+                        gpu_acceleration: true
                     }
                 };
 
@@ -1170,6 +1205,12 @@
                                 strength: 0.7 + (i * 0.1)
                             }))
                         }
+                    },
+                    desktop_compatibility: {
+                        supported_platforms: ["windows", "macos", "linux"],
+                        local_processing: true,
+                        offline_capable: true,
+                        gpu_acceleration: true
                     }
                 };
 
@@ -1177,43 +1218,20 @@
                 this.showScreen('library-screen');
             }
 
-            // === ENHANCED: Launch Avatar Creator with better tab communication ===
-            launchAvatarCreator(profileId) {
-                if (!this.verifyOwnership(profileId)) {
-                    this.showError('You do not have permission to use this profile');
-                    return;
-                }
-
+            // === ENHANCED: Desktop app integration ===
+            openDesktopWithProfile(profileId) {
                 const profile = this.getProfile(profileId);
                 if (profile) {
-                    const transferData = {
-                        profileData: profile.data,
-                        source: 'library',
-                        timestamp: Date.now(),
-                        userId: auth.getCurrentUser().id
-                    };
+                    // First export the profile
+                    this.exportProfile(profileId);
                     
-                    localStorage.setItem('current_npi_for_avatar', JSON.stringify(transferData));
+                    // Show instructions for desktop app
+                    this.showSuccess(`"${profile.name}" exported!\n\nTo run this profile locally:\n\n1. Download Neura Desktop App from download.html\n2. Install on your computer (Windows, macOS, or Linux)\n3. Import the .neura file\n4. Run AI 100% locally with no internet needed!`);
                     
-                    this.showSuccess(`"${profile.name}" sent to Avatar Creator! Closing library...`);
-                    
+                    // Open download page after a delay
                     setTimeout(() => {
-                        const avatarWindow = window.open('avatar.html', '_blank');
-                        if (avatarWindow) {
-                            avatarWindow.focus();
-                        }
-                        setTimeout(() => {
-                            // Close this tab or go back
-                            if (window.history.length > 1) {
-                                window.close();
-                            } else {
-                                window.location.href = 'index.html';
-                            }
-                        }, 1000);
-                    }, 1500);
-                    
-                } else {
-                    this.showError('Profile not found');
+                        window.open('download.html', '_blank');
+                    }, 2000);
                 }
             }
 
@@ -1222,7 +1240,7 @@
                 const element = document.getElementById('success-message');
                 element.textContent = message;
                 element.classList.add('show');
-                setTimeout(() => element.classList.remove('show'), 3000);
+                setTimeout(() => element.classList.remove('show'), 5000);
             }
 
             showError(message) {
@@ -1290,22 +1308,9 @@
 
         // Listen for profile creations from other pages
         window.addEventListener('storage', (e) => {
-            if (e.key === 'neura_library') {
+            if (e.key && e.key.startsWith('user_') && e.key.endsWith('_neura_library')) {
                 window.app.profiles = window.app.loadProfiles();
                 window.app.renderLibrary();
-            }
-        });
-
-        // Check if we have a new profile to add (from profiler)
-        window.addEventListener('load', () => {
-            const user = auth.getCurrentUser();
-            if (user) {
-                const userKey = auth.getUserStorageKey('neura_library');
-                const stored = localStorage.getItem(userKey);
-                if (stored) {
-                    window.app.profiles = JSON.parse(stored);
-                    window.app.renderLibrary();
-                }
             }
         });
     </script>
