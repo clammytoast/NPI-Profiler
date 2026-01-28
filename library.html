@@ -1207,11 +1207,7 @@
                             <h1>${profile.name} ${formatBadge}</h1>
                             <p class="subtitle">${profile.type} • ${format === 'scientific' ? 'Scientific Assessment' : 'Legacy Profile'} • Created ${new Date(profile.created).toLocaleDateString()}</p>
                         </div>
-                        <div style="display: flex; gap: 1rem;">
-                            <button class="btn-primary" onclick="app.exportProfile('${profile.id}')">Export .neura</button>
-                            <button class="btn-secondary" onclick="app.openDesktopWithProfile('${profile.id}')">Run in Desktop App</button>
-                            <button class="btn-danger" onclick="app.deleteProfile('${profile.id}')">Delete</button>
-                        </div>
+                
                     </div>
 
                     ${statsContent}
