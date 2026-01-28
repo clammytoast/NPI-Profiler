@@ -216,6 +216,18 @@
             font-size: 0.8rem;
         }
 
+        .trait-scientific {
+            background: #3b82f6;
+        }
+
+        .trait-legacy {
+            background: #718096;
+        }
+
+        .trait-demo {
+            background: #ed8936;
+        }
+
         .neura-actions {
             display: flex;
             gap: 0.5rem;
@@ -376,6 +388,66 @@
             text-align: center;
         }
 
+        .profile-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .badge-scientific {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .badge-legacy {
+            background: #718096;
+            color: white;
+        }
+
+        .badge-demo {
+            background: #ed8936;
+            color: white;
+        }
+
+        .compatibility-warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .compatibility-warning.show {
+            display: block;
+        }
+
+        .file-format-info {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .format-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 0;
@@ -398,6 +470,10 @@
             
             .neura-actions {
                 flex-direction: column;
+            }
+            
+            .format-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -453,6 +529,50 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .version-info {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+
+        .personality-vector {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .vector-dimension {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            margin: 2px;
+            background: #f7fafc;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #4a5568;
+        }
+
+        .vector-dimension.high {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .vector-dimension.medium {
+            background: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .vector-dimension.low {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
     </style>
 </head>
 <body>
@@ -463,7 +583,7 @@
                 <div class="library-header">
                     <div>
                         <h1>Neura Library</h1>
-                        <p class="subtitle">Manage Your Digital Minds</p>
+                        <p class="subtitle">Manage Your Scientific & Legacy Digital Minds</p>
                         <div id="user-info" class="user-info">
                             <!-- User info will be populated here -->
                         </div>
@@ -480,10 +600,30 @@
                     <button class="btn-primary" onclick="window.location.href='index.html'">Sign In to Neura</button>
                 </div>
 
+                <div class="file-format-info">
+                    <h3>📋 Supported File Formats</h3>
+                    <div class="format-grid">
+                        <div class="format-card">
+                            <strong>Scientific Format (.neura)</strong>
+                            <p>Version 3.1 with 50D personality vectors, validated psychological scales</p>
+                            <span class="profile-badge badge-scientific">Scientific</span>
+                        </div>
+                        <div class="format-card">
+                            <strong>Legacy Format (.neura)</strong>
+                            <p>Version 1.0-2.0 with narrative-based personality profiles</p>
+                            <span class="profile-badge badge-legacy">Legacy</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="desktop-integration-card">
-                    <h3>💻 Run Profiles Locally</h3>
-                    <p>Download our desktop application to run your Neura Profiles 100% locally on your machine.</p>
+                    <h3>💻 Run All Profile Types Locally</h3>
+                    <p>Our desktop application supports both scientific and legacy Neura Profiles.</p>
                     <button class="btn-primary" onclick="window.open('download.html', '_blank')">Download Desktop App</button>
+                </div>
+
+                <div class="compatibility-warning" id="compatibility-warning">
+                    <!-- Compatibility warnings will appear here -->
                 </div>
 
                 <div class="success-message" id="success-message"></div>
@@ -508,12 +648,39 @@
                 <p class="subtitle">Choose how you want to create your digital mind</p>
 
                 <div class="neura-grid">
-                    <div class="neura-card" onclick="app.launchProfiler()" style="cursor: pointer;">
+                    <div class="neura-card" onclick="app.launchScientificProfiler()" style="cursor: pointer;">
                         <div class="neura-card-header">
-                            <h3 class="neura-name">Complete Profiler</h3>
+                            <h3 class="neura-name">Scientific Assessment</h3>
                             <span class="neura-type">Recommended</span>
                         </div>
-                        <p>Use our comprehensive 47-question profiler to build a detailed profile based on your personality, values, and experiences.</p>
+                        <p>40 validated psychological scales. Higher reliability, 15-20 minutes. Creates 50D personality vectors.</p>
+                        <div class="neura-stats">
+                            <div class="stat">
+                                <div class="stat-number">40</div>
+                                <div class="stat-label">Scales</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">15-20</div>
+                                <div class="stat-label">Minutes</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">50D</div>
+                                <div class="stat-label">Vector</div>
+                            </div>
+                        </div>
+                        <div class="neura-traits">
+                            <span class="trait trait-scientific">Validated</span>
+                            <span class="trait trait-scientific">Reliable</span>
+                            <span class="trait trait-scientific">Scientific</span>
+                        </div>
+                    </div>
+
+                    <div class="neura-card" onclick="app.launchLegacyProfiler()" style="cursor: pointer;">
+                        <div class="neura-card-header">
+                            <h3 class="neura-name">Legacy Profiler</h3>
+                            <span class="neura-type">Narrative</span>
+                        </div>
+                        <p>47 narrative questions about life experiences. 30-45 minutes. Creates nurture-based profiles.</p>
                         <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">47</div>
@@ -527,6 +694,11 @@
                                 <div class="stat-number">⭐</div>
                                 <div class="stat-label">Detailed</div>
                             </div>
+                        </div>
+                        <div class="neura-traits">
+                            <span class="trait trait-legacy">Narrative</span>
+                            <span class="trait trait-legacy">Experience</span>
+                            <span class="trait trait-legacy">Detailed</span>
                         </div>
                     </div>
 
@@ -552,47 +724,30 @@
                         </div>
                     </div>
 
-                    <div class="neura-card" onclick="app.createFromTemplate('analytical')" style="cursor: pointer;">
+                    <div class="neura-card" onclick="app.createFromTemplate('scientific_balanced')" style="cursor: pointer;">
                         <div class="neura-card-header">
-                            <h3 class="neura-name">Analytical Thinker</h3>
+                            <h3 class="neura-name">Scientific Template</h3>
                             <span class="neura-type">Template</span>
                         </div>
-                        <p>Start with a logical, data-driven personality template perfect for analytical tasks and reasoning.</p>
+                        <p>Start with a scientifically balanced personality template with validated parameters.</p>
                         <div class="neura-stats">
                             <div class="stat">
                                 <div class="stat-number">🧠</div>
-                                <div class="stat-label">Logical</div>
+                                <div class="stat-label">Scientific</div>
                             </div>
                             <div class="stat">
                                 <div class="stat-number">📊</div>
-                                <div class="stat-label">Data-driven</div>
+                                <div class="stat-label">Validated</div>
                             </div>
                             <div class="stat">
                                 <div class="stat-number">⚖️</div>
                                 <div class="stat-label">Balanced</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="neura-card" onclick="app.createFromTemplate('creative')" style="cursor: pointer;">
-                        <div class="neura-card-header">
-                            <h3 class="neura-name">Creative Explorer</h3>
-                            <span class="neura-type">Template</span>
-                        </div>
-                        <p>Begin with an imaginative, innovative personality ideal for creative projects and brainstorming.</p>
-                        <div class="neura-stats">
-                            <div class="stat">
-                                <div class="stat-number">🎨</div>
-                                <div class="stat-label">Creative</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-number">💡</div>
-                                <div class="stat-label">Innovative</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-number">🚀</div>
-                                <div class="stat-label">Visionary</div>
-                            </div>
+                        <div class="neura-traits">
+                            <span class="trait trait-scientific">Validated</span>
+                            <span class="trait">Balanced</span>
+                            <span class="trait">Adaptive</span>
                         </div>
                     </div>
                 </div>
@@ -605,28 +760,29 @@
                 <button class="back-button" onclick="app.showScreen('library-screen')">← Back to Library</button>
                 
                 <h1>Import Neura Profile</h1>
-                <p class="subtitle">Upload your .neura files or import from other sources</p>
+                <p class="subtitle">Upload .neura files in any format (Scientific 3.1, Legacy 1.0-2.0, or JSON)</p>
 
                 <div class="import-area" id="import-area">
                     <div class="import-icon">📁</div>
                     <h3>Drag & Drop Your .neura File</h3>
-                    <p>or click to browse your files</p>
+                    <p>Supports scientific formats, legacy formats, and JSON exports</p>
                     <input type="file" id="file-input" class="file-input" accept=".neura,.json">
                     <button class="btn-primary" onclick="document.getElementById('file-input').click()">Choose File</button>
+                    <p class="version-info">Supported: Scientific v3.1, Legacy v1.0-2.0, Library exports</p>
                 </div>
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Importing Neura profile...</p>
+                    <p>Analyzing and importing Neura profile...</p>
                 </div>
 
                 <div style="margin-top: 2rem; padding: 1.5rem; background: #f7fafc; border-radius: 8px;">
                     <h3>Quick Demo Profiles</h3>
                     <p>Start with these pre-built Neura examples</p>
                     <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                        <button class="btn-secondary" onclick="app.createDemoProfile('balanced')">Balanced Analyst</button>
-                        <button class="btn-secondary" onclick="app.createDemoProfile('empathetic')">Empathic Listener</button>
-                        <button class="btn-secondary" onclick="app.createDemoProfile('strategic')">Strategic Planner</button>
+                        <button class="btn-secondary" onclick="app.createDemoProfile('scientific_balanced')">Scientific Balanced</button>
+                        <button class="btn-secondary" onclick="app.createDemoProfile('legacy_empathetic')">Legacy Empathetic</button>
+                        <button class="btn-secondary" onclick="app.createDemoProfile('scientific_analytical')">Scientific Analytical</button>
                     </div>
                 </div>
             </div>
@@ -645,7 +801,7 @@
     </div>
 
     <script>
-        // === COMPLETE NEURA LIBRARY SYSTEM ===
+        // === ENHANCED NEURA LIBRARY SYSTEM WITH FORMAT SUPPORT ===
         class NeuraLibrary {
             constructor() {
                 this.profiles = this.loadProfiles();
@@ -685,7 +841,19 @@
                     
                     const userKey = auth.getUserStorageKey('neura_library');
                     const stored = localStorage.getItem(userKey);
-                    return stored ? JSON.parse(stored) : [];
+                    const profiles = stored ? JSON.parse(stored) : [];
+                    
+                    // Add format detection to existing profiles
+                    profiles.forEach(profile => {
+                        if (!profile.format) {
+                            profile.format = this.detectProfileFormat(profile.data);
+                        }
+                        if (!profile.stats) {
+                            profile.stats = this.calculateStats(profile.data);
+                        }
+                    });
+                    
+                    return profiles;
                 } catch (error) {
                     console.error('Error loading profiles:', error);
                     return [];
@@ -709,30 +877,78 @@
                 }
             }
 
-            // === ENHANCED: Add profile with user verification ===
-            addProfile(profileData) {
+            // === ENHANCED: Add profile with format detection ===
+            addProfile(profileData, fileName = '') {
                 if (!auth.isAuthenticated()) {
                     this.showError('Please sign in to save Neura Profiles');
                     return null;
                 }
 
+                const format = this.detectProfileFormat(profileData);
+                const profileName = fileName || profileData.metadata?.name || 
+                    profileData.profile?.metadata?.name || 
+                    `Unnamed ${format === 'scientific' ? 'Scientific' : format === 'legacy' ? 'Legacy' : 'Neura'} Profile`;
+
                 const profile = {
-                    id: 'neura_' + Date.now(),
-                    name: profileData.metadata?.name || 'Unnamed Neura Profile',
-                    type: profileData.metadata?.profile_type || 'custom',
+                    id: 'neura_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    name: profileName,
+                    type: format === 'scientific' ? 'scientific_assessment' : 
+                          format === 'legacy' ? 'nurture_based' : 'custom',
+                    format: format,
                     created: new Date().toISOString(),
                     updated: new Date().toISOString(),
-                    data: profileData,
-                    stats: this.calculateStats(profileData),
-                    owner: auth.getCurrentUser().id
+                    data: profileData.profile || profileData, // Handle both wrapped and direct formats
+                    stats: this.calculateStats(profileData.profile || profileData),
+                    owner: auth.getCurrentUser().id,
+                    source: fileName || 'created_in_library'
                 };
                 
                 this.profiles.unshift(profile);
                 this.saveProfiles();
                 this.renderLibrary();
                 this.checkAuthentication();
-                this.showSuccess(`Neura Profile "${profile.name}" created successfully!`);
+                
+                let formatMessage = '';
+                if (format === 'scientific') {
+                    formatMessage = ' (Scientific format with 50D personality vector)';
+                } else if (format === 'legacy') {
+                    formatMessage = ' (Legacy narrative format)';
+                }
+                
+                this.showSuccess(`Neura Profile "${profile.name}" imported successfully!${formatMessage}`);
                 return profile;
+            }
+
+            // === NEW: Detect profile format ===
+            detectProfileFormat(profileData) {
+                // Check for scientific format (v3.1)
+                if (profileData.spec_version === "3.1" || 
+                    profileData.assessment_type === "scientific_psychological" ||
+                    profileData.engine_parameters?.personality_vector?.dimensions === 50) {
+                    return 'scientific';
+                }
+                
+                // Check for wrapped scientific format
+                if (profileData.header?.type === "SCIENTIFIC_NEURA_PROFILE" ||
+                    profileData.profile?.spec_version === "3.1") {
+                    return 'scientific';
+                }
+                
+                // Check for legacy format
+                if (profileData.neura_spec_version && 
+                    (profileData.neura_spec_version.startsWith("1.") || 
+                     profileData.neura_spec_version.startsWith("2."))) {
+                    return 'legacy';
+                }
+                
+                // Check for wrapped legacy format
+                if (profileData.header?.type === "NEURA_PROFILE" ||
+                    profileData.profile?.neura_spec_version) {
+                    return 'legacy';
+                }
+                
+                // Default to unknown/custom
+                return 'unknown';
             }
 
             // === ENHANCED: Verify ownership before operations ===
@@ -778,7 +994,7 @@
                 return profile && user && profile.owner === user.id;
             }
 
-            // === RENDERING ===
+            // === ENHANCED RENDERING WITH FORMAT DETECTION ===
             renderLibrary() {
                 const container = document.getElementById('neura-grid-container');
                 
@@ -797,10 +1013,17 @@
                     return;
                 }
 
-                container.innerHTML = this.profiles.map(profile => `
+                container.innerHTML = this.profiles.map(profile => {
+                    const formatBadge = profile.format === 'scientific' ? 
+                        '<span class="profile-badge badge-scientific">Scientific</span>' :
+                        profile.format === 'legacy' ?
+                        '<span class="profile-badge badge-legacy">Legacy</span>' :
+                        '<span class="profile-badge">Custom</span>';
+                    
+                    return `
                     <div class="neura-card">
                         <div class="neura-card-header">
-                            <h3 class="neura-name">${profile.name}</h3>
+                            <h3 class="neura-name">${profile.name} ${formatBadge}</h3>
                             <span class="neura-type">${profile.type}</span>
                         </div>
                         
@@ -814,19 +1037,20 @@
                                 <div class="stat-label">Principles</div>
                             </div>
                             <div class="stat">
-                                <div class="stat-number">${profile.stats.questions}</div>
-                                <div class="stat-label">Questions</div>
+                                <div class="stat-number">${profile.format === 'scientific' ? '50' : profile.stats.dimensions || profile.stats.questions}</div>
+                                <div class="stat-label">${profile.format === 'scientific' ? 'Dimensions' : 'Questions'}</div>
                             </div>
                         </div>
 
                         <div class="neura-traits">
                             ${profile.stats.traits.slice(0, 3).map(trait => `
-                                <span class="trait">${trait}</span>
+                                <span class="trait ${profile.format === 'scientific' ? 'trait-scientific' : profile.format === 'legacy' ? 'trait-legacy' : ''}">${trait}</span>
                             `).join('')}
                             ${profile.stats.traits.length > 3 ? `<span class="trait">+${profile.stats.traits.length - 3}</span>` : ''}
                         </div>
 
                         <p style="color: #718096; font-size: 0.9rem; margin: 0.5rem 0;">
+                            ${profile.format === 'scientific' ? '🔬 Scientific' : profile.format === 'legacy' ? '📝 Narrative' : '📦 Custom'} • 
                             Created: ${new Date(profile.created).toLocaleDateString()}
                         </p>
 
@@ -837,19 +1061,151 @@
                             <button class="neura-action-btn action-danger" onclick="app.deleteProfile('${profile.id}')">Delete</button>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
             }
 
+            // === ENHANCED: Render profile details with format-specific info ===
             renderProfileDetail(id) {
                 const profile = this.getProfile(id);
                 if (!profile) return;
 
                 const container = document.getElementById('neura-detail-content');
+                const format = profile.format;
+                const data = profile.data;
+                
+                // Prepare format-specific content
+                let formatBadge = '';
+                let statsContent = '';
+                let personalityContent = '';
+                let technicalContent = '';
+                let compatibilityContent = '';
+                
+                if (format === 'scientific') {
+                    formatBadge = '<span class="profile-badge badge-scientific">Scientific v3.1</span>';
+                    
+                    statsContent = `
+                        <div class="detail-stats">
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.nodes}</div>
+                                <div>Neural Nodes</div>
+                            </div>
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${data.psychological_profile?.big_five?.interpretation?.length || 0}</div>
+                                <div>Personality Traits</div>
+                            </div>
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">50</div>
+                                <div>Vector Dimensions</div>
+                            </div>
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${Math.round((data.metadata?.reliability_estimate || 0.8) * 100)}%</div>
+                                <div>Reliability</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Personality vector visualization
+                    if (data.engine_parameters?.personality_vector?.vector) {
+                        const vector = data.engine_parameters.personality_vector.vector;
+                        personalityContent = `
+                            <div class="detail-section">
+                                <h3>50-Dimensional Personality Vector</h3>
+                                <div class="personality-vector">
+                                    ${vector.map((value, index) => {
+                                        let className = 'vector-dimension';
+                                        if (value >= 0.7) className += ' high';
+                                        else if (value >= 0.4) className += ' medium';
+                                        else className += ' low';
+                                        
+                                        return `<span class="${className}" title="Dimension ${index + 1}: ${value.toFixed(2)}">${index + 1}</span>`;
+                                    }).join('')}
+                                </div>
+                                <p><small>Each square represents one dimension of your 50D personality vector. Darker blues indicate stronger traits.</small></p>
+                            </div>
+                        `;
+                    }
+                    
+                    technicalContent = `
+                        <div class="detail-section">
+                            <h3>Scientific Assessment</h3>
+                            <p><strong>Assessment Type:</strong> ${data.assessment_type || 'scientific_psychological'}</p>
+                            <p><strong>Validation Level:</strong> ${data.validation_level || 'high'}</p>
+                            <p><strong>Reliability Estimate:</strong> ${((data.metadata?.reliability_estimate || 0.8) * 100).toFixed(0)}%</p>
+                            <p><strong>Sources:</strong> ${(data.metadata?.assessment_sources || ['Big Five', 'Moral Foundations']).slice(0, 3).join(', ')}...</p>
+                        </div>
+                    `;
+                    
+                } else if (format === 'legacy') {
+                    formatBadge = '<span class="profile-badge badge-legacy">Legacy Format</span>';
+                    
+                    statsContent = `
+                        <div class="detail-stats">
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.nodes}</div>
+                                <div>Neural Nodes</div>
+                            </div>
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.principles}</div>
+                                <div>Core Principles</div>
+                            </div>
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.questions}</div>
+                                <div>Questions Answered</div>
+                            </div>
+                            <div class="detail-stat">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.connections}</div>
+                                <div>Connections</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    technicalContent = `
+                        <div class="detail-section">
+                            <h3>Profile Details</h3>
+                            <p><strong>Neura Spec Version:</strong> ${data.neura_spec_version || '1.0'}</p>
+                            <p><strong>Profile Type:</strong> ${data.metadata?.profile_type || 'nurture_based'}</p>
+                            <p><strong>Questions Answered:</strong> ${data.metadata?.questions_answered || 0}</p>
+                        </div>
+                    `;
+                }
+                
+                // Common content
+                const commonContent = `
+                    <div class="detail-section">
+                        <h3>Personality Traits</h3>
+                        <div class="neura-traits">
+                            ${profile.stats.traits.map(trait => `
+                                <span class="trait ${format === 'scientific' ? 'trait-scientific' : format === 'legacy' ? 'trait-legacy' : ''}">${trait}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Reasoning System</h3>
+                        ${format === 'scientific' ? `
+                            <p><strong>Primary Reasoning Mode:</strong> ${data.psychological_profile?.cognitive_architecture?.thinking_style || 'balanced'}</p>
+                            <p><strong>Decision Making:</strong> ${data.psychological_profile?.cognitive_architecture?.decision_making || 'analytical'}</p>
+                            <p><strong>Learning Rate:</strong> ${data.engine_parameters?.learning_parameters?.learning_rate?.toFixed(2) || '0.15'}</p>
+                        ` : `
+                            <p><strong>Default Style:</strong> ${data.brain_architecture?.reasoning_system?.default_style || 'balanced_analysis'}</p>
+                            <p><strong>Base Mood:</strong> ${data.brain_architecture?.emotional_system?.base_mood || 'reflective_calm'}</p>
+                        `}
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Desktop Compatibility</h3>
+                        <p><strong>Local Processing:</strong> ✅ Yes</p>
+                        <p><strong>Offline Capable:</strong> ✅ Yes</p>
+                        <p><strong>GPU Acceleration:</strong> ✅ Yes</p>
+                        <p><strong>Platforms:</strong> Windows, macOS, Linux</p>
+                    </div>
+                `;
+                
                 container.innerHTML = `
                     <div class="detail-header">
                         <div>
-                            <h1>${profile.name}</h1>
-                            <p class="subtitle">${profile.type} • Created ${new Date(profile.created).toLocaleDateString()}</p>
+                            <h1>${profile.name} ${formatBadge}</h1>
+                            <p class="subtitle">${profile.type} • ${format === 'scientific' ? 'Scientific Assessment' : 'Legacy Profile'} • Created ${new Date(profile.created).toLocaleDateString()}</p>
                         </div>
                         <div style="display: flex; gap: 1rem;">
                             <button class="btn-primary" onclick="app.exportProfile('${profile.id}')">Export .neura</button>
@@ -858,80 +1214,66 @@
                         </div>
                     </div>
 
-                    <div class="detail-stats">
-                        <div class="detail-stat">
-                            <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.nodes}</div>
-                            <div>Neural Nodes</div>
-                        </div>
-                        <div class="detail-stat">
-                            <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.principles}</div>
-                            <div>Core Principles</div>
-                        </div>
-                        <div class="detail-stat">
-                            <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.questions}</div>
-                            <div>Questions Answered</div>
-                        </div>
-                        <div class="detail-stat">
-                            <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${profile.stats.connections}</div>
-                            <div>Connections</div>
-                        </div>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>Personality Traits</h3>
-                        <div class="neura-traits">
-                            ${profile.stats.traits.map(trait => `
-                                <span class="trait">${trait}</span>
-                            `).join('')}
-                        </div>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>Reasoning System</h3>
-                        <p><strong>Default Style:</strong> ${profile.data.brain_architecture?.reasoning_system?.default_style || 'balanced_analysis'}</p>
-                        <p><strong>Base Mood:</strong> ${profile.data.brain_architecture?.emotional_system?.base_mood || 'reflective_calm'}</p>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>Moral Framework</h3>
-                        ${profile.data.brain_architecture?.moral_framework?.principles ? `
-                            <ul style="margin-left: 1.5rem;">
-                                ${profile.data.brain_architecture.moral_framework.principles.map(p => `
-                                    <li><strong>${p.name}:</strong> ${(p.strength * 100).toFixed(0)}% strength</li>
-                                `).join('')}
-                            </ul>
-                        ` : '<p>No principles defined</p>'}
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>Desktop Compatibility</h3>
-                        <p><strong>Local Processing:</strong> ${profile.data.desktop_compatibility?.local_processing ? '✅ Yes' : '❌ No'}</p>
-                        <p><strong>Offline Capable:</strong> ${profile.data.desktop_compatibility?.offline_capable ? '✅ Yes' : '❌ No'}</p>
-                        <p><strong>GPU Acceleration:</strong> ${profile.data.desktop_compatibility?.gpu_acceleration ? '✅ Yes' : '❌ No'}</p>
-                        <p><strong>Platforms:</strong> ${profile.data.desktop_compatibility?.supported_platforms?.join(', ') || 'Windows, macOS, Linux'}</p>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>Technical Details</h3>
-                        <p><strong>Neura Spec Version:</strong> ${profile.data.neura_spec_version || '1.0'}</p>
-                        <p><strong>Created:</strong> ${new Date(profile.data.metadata?.created_date || profile.created).toLocaleString()}</p>
-                        <p><strong>Type:</strong> ${profile.data.metadata?.profile_type || 'nurture_based'}</p>
-                    </div>
+                    ${statsContent}
+                    ${personalityContent}
+                    ${commonContent}
+                    ${technicalContent}
                 `;
             }
 
-            // === UTILITIES ===
+            // === ENHANCED: Calculate stats with format awareness ===
             calculateStats(profileData) {
-                return {
-                    nodes: profileData.brain_architecture?.neural_network?.nodes || 25,
-                    connections: profileData.brain_architecture?.neural_network?.connections || 75,
-                    principles: profileData.brain_architecture?.moral_framework?.principles?.length || 3,
-                    questions: profileData.metadata?.questions_answered || 0,
-                    traits: this.extractTraits(profileData)
-                };
+                const format = this.detectProfileFormat(profileData);
+                
+                if (format === 'scientific') {
+                    return {
+                        nodes: profileData.neural_configuration?.nodes || 100,
+                        connections: profileData.neural_configuration?.connections || 300,
+                        principles: profileData.psychological_profile?.moral_architecture?.foundations ? 
+                            Object.keys(profileData.psychological_profile.moral_architecture.foundations).length : 5,
+                        dimensions: 50,
+                        traits: this.extractScientificTraits(profileData)
+                    };
+                } else {
+                    // Legacy format
+                    return {
+                        nodes: profileData.brain_architecture?.neural_network?.nodes || 25,
+                        connections: profileData.brain_architecture?.neural_network?.connections || 75,
+                        principles: profileData.brain_architecture?.moral_framework?.principles?.length || 3,
+                        questions: profileData.metadata?.questions_answered || 0,
+                        traits: this.extractLegacyTraits(profileData)
+                    };
+                }
             }
 
-            extractTraits(profileData) {
+            extractScientificTraits(profileData) {
+                const traits = [];
+                
+                // Add Big Five interpretations
+                const bigFive = profileData.psychological_profile?.big_five?.interpretation;
+                if (bigFive && Array.isArray(bigFive)) {
+                    traits.push(...bigFive.slice(0, 3));
+                }
+                
+                // Add cognitive style
+                const cognitiveStyle = profileData.psychological_profile?.cognitive_architecture?.thinking_style;
+                if (cognitiveStyle) {
+                    traits.push(cognitiveStyle);
+                }
+                
+                // Add moral foundation
+                const moralConcern = profileData.psychological_profile?.moral_architecture?.primary_moral_concern;
+                if (moralConcern) {
+                    traits.push(moralConcern.replace(/_/g, ' '));
+                }
+                
+                // Default scientific traits
+                traits.push('validated', 'data-driven', 'psychological');
+                
+                return traits.slice(0, 6);
+            }
+
+            extractLegacyTraits(profileData) {
                 const traits = [];
                 const reasoning = profileData.brain_architecture?.reasoning_system?.default_style;
                 if (reasoning) traits.push(reasoning.replace(/_/g, ' '));
@@ -939,7 +1281,7 @@
                 const mood = profileData.brain_architecture?.emotional_system?.base_mood;
                 if (mood) traits.push(mood.replace(/_/g, ' '));
                 
-                traits.push('experience-based', 'value-driven', 'adaptive');
+                traits.push('experience-based', 'value-driven', 'adaptive', 'narrative');
                 
                 return traits.slice(0, 6);
             }
@@ -962,7 +1304,7 @@
                 this.showScreen('detail-screen');
             }
 
-            // === IMPORT/EXPORT ===
+            // === ENHANCED IMPORT WITH FORMAT DETECTION ===
             importProfile(file) {
                 const loading = document.getElementById('loading');
                 loading.classList.add('show');
@@ -970,17 +1312,43 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     try {
-                        const profileData = JSON.parse(e.target.result);
+                        const fileContent = e.target.result;
+                        let profileData;
                         
-                        if (!profileData.neura_spec_version || !profileData.brain_architecture) {
-                            throw new Error('Invalid Neura profile file format');
+                        // Try to parse as JSON
+                        try {
+                            profileData = JSON.parse(fileContent);
+                        } catch (jsonError) {
+                            throw new Error('Invalid JSON format. Please ensure the file is a valid .neura or .json file.');
                         }
 
-                        this.addProfile(profileData);
+                        // Detect format and validate
+                        const format = this.detectProfileFormat(profileData);
+                        
+                        if (format === 'unknown') {
+                            // Check if it's a library export
+                            if (profileData.export_version && profileData.profiles) {
+                                // Import all profiles from library export
+                                let importedCount = 0;
+                                profileData.profiles.forEach(profile => {
+                                    if (profile) {
+                                        this.addProfile(profile, `imported_${Date.now()}`);
+                                        importedCount++;
+                                    }
+                                });
+                                this.showSuccess(`Imported ${importedCount} profiles from library backup`);
+                            } else {
+                                throw new Error('Unrecognized Neura profile format. Please use Scientific v3.1, Legacy v1.0-2.0, or Library export formats.');
+                            }
+                        } else {
+                            // Single profile import
+                            this.addProfile(profileData, file.name);
+                        }
+                        
                         this.showScreen('library-screen');
                         
                     } catch (error) {
-                        this.showError('Invalid Neura profile file: ' + error.message);
+                        this.showError('Import failed: ' + error.message);
                     } finally {
                         loading.classList.remove('show');
                     }
@@ -988,17 +1356,54 @@
                 
                 reader.onerror = () => {
                     loading.classList.remove('show');
-                    this.showError('Error reading file');
+                    this.showError('Error reading file. The file may be corrupted or inaccessible.');
                 };
                 
                 reader.readAsText(file);
             }
 
+            // === ENHANCED EXPORT WITH FORMAT PRESERVATION ===
             exportProfile(id) {
                 const profile = this.getProfile(id);
                 if (!profile) return;
 
-                const blob = new Blob([JSON.stringify(profile.data, null, 2)], { type: 'application/json' });
+                let exportData;
+                const format = profile.format;
+                
+                if (format === 'scientific') {
+                    exportData = {
+                        header: {
+                            type: "SCIENTIFIC_NEURA_PROFILE",
+                            version: "3.1",
+                            created: new Date().toISOString(),
+                            assessment_type: "validated_psychological"
+                        },
+                        profile: profile.data,
+                        quick_reference: {
+                            format: "scientific_v3.1",
+                            personality_vector_dimensions: 50,
+                            engine_ready: true
+                        }
+                    };
+                } else {
+                    exportData = {
+                        header: {
+                            type: "NEURA_PROFILE",
+                            version: profile.data.neura_spec_version || "1.0",
+                            created: new Date().toISOString()
+                        },
+                        profile: profile.data,
+                        quick_reference: {
+                            format: profile.data.neura_spec_version ? `legacy_v${profile.data.neura_spec_version}` : "custom",
+                            engine_ready: true
+                        }
+                    };
+                }
+
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
+                    type: 'application/json' 
+                });
+                
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
@@ -1006,7 +1411,11 @@
                 link.click();
                 URL.revokeObjectURL(url);
                 
-                this.showSuccess(`Neura Profile "${profile.name}" exported!\n\nDownload our desktop app to run this profile 100% locally.`);
+                let formatMessage = format === 'scientific' ? 
+                    ' (Scientific format with 50D personality vector)' : 
+                    ' (Legacy narrative format)';
+                
+                this.showSuccess(`Neura Profile "${profile.name}" exported!${formatMessage}\n\nDownload our desktop app to run this profile 100% locally.`);
             }
 
             exportAllProfiles() {
@@ -1016,10 +1425,24 @@
                 }
 
                 const exportData = {
-                    export_version: "1.0",
+                    export_version: "2.0",
                     exported_at: new Date().toISOString(),
                     total_profiles: this.profiles.length,
-                    profiles: this.profiles.map(profile => profile.data)
+                    profiles_by_format: {
+                        scientific: this.profiles.filter(p => p.format === 'scientific').length,
+                        legacy: this.profiles.filter(p => p.format === 'legacy').length,
+                        custom: this.profiles.filter(p => p.format === 'unknown').length
+                    },
+                    profiles: this.profiles.map(profile => ({
+                        metadata: {
+                            id: profile.id,
+                            name: profile.name,
+                            format: profile.format,
+                            type: profile.type,
+                            created: profile.created
+                        },
+                        data: profile.data
+                    }))
                 };
 
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -1030,16 +1453,25 @@
                 link.click();
                 URL.revokeObjectURL(url);
                 
-                this.showSuccess(`Exported ${this.profiles.length} profiles successfully!\n\nDownload our desktop app to run these profiles 100% locally.`);
+                this.showSuccess(`Exported ${this.profiles.length} profiles successfully!\n\nIncludes ${exportData.profiles_by_format.scientific} scientific and ${exportData.profiles_by_format.legacy} legacy profiles.`);
             }
 
             // === CREATION METHODS ===
-            launchProfiler() {
+            launchScientificProfiler() {
                 if (!auth.isAuthenticated()) {
                     this.showError('Please sign in to create profiles');
                     return;
                 }
                 window.open('profiler.html', '_blank');
+            }
+
+            launchLegacyProfiler() {
+                if (!auth.isAuthenticated()) {
+                    this.showError('Please sign in to create profiles');
+                    return;
+                }
+                // Open legacy profiler (you might have a separate file or parameter)
+                window.open('profiler.html?legacy=true', '_blank');
             }
 
             createQuickProfile() {
@@ -1097,124 +1529,130 @@
                 }
 
                 const templates = {
-                    analytical: {
-                        name: "Analytical Thinker",
-                        reasoning: "principled_directness",
-                        mood: "analytical_calm",
-                        traits: ["logical", "data-driven", "systematic"]
+                    scientific_balanced: {
+                        name: "Scientifically Balanced Profile",
+                        format: "scientific",
+                        data: this.createScientificTemplate('balanced')
                     },
-                    creative: {
-                        name: "Creative Explorer", 
-                        reasoning: "creative_exploration",
-                        mood: "inspired_curious",
-                        traits: ["imaginative", "innovative", "visionary"]
+                    scientific_analytical: {
+                        name: "Scientific Analytical Thinker",
+                        format: "scientific", 
+                        data: this.createScientificTemplate('analytical')
                     }
                 };
 
-                const template = templates[templateType] || templates.analytical;
+                const template = templates[templateType] || templates.scientific_balanced;
 
-                const templateProfile = {
-                    neura_spec_version: "1.0",
+                this.addProfile(template.data, template.name);
+                this.showScreen('library-screen');
+            }
+
+            createScientificTemplate(type) {
+                const baseProfile = {
+                    spec_version: "3.1",
+                    assessment_type: "scientific_psychological",
+                    validation_level: "high",
                     metadata: {
-                        name: template.name + " - " + new Date().toLocaleDateString(),
-                        creator: "template",
+                        name: `${type.charAt(0).toUpperCase() + type.slice(1)} Scientific Profile`,
+                        creator: "scientific_template",
                         created_date: new Date().toISOString(),
-                        profile_type: "template_based",
-                        questions_answered: 0
+                        assessment_sources: ["Big Five Inventory", "Moral Foundations Questionnaire", "HEXACO"],
+                        reliability_estimate: 0.85,
+                        validity_indicators: ["construct_valid"]
                     },
-                    brain_architecture: {
-                        neural_network: {
-                            nodes: 20,
-                            connections: 60
+                    psychological_profile: {
+                        big_five: {
+                            openness: type === 'analytical' ? 0.6 : 0.5,
+                            conscientiousness: 0.7,
+                            extraversion: type === 'analytical' ? 0.4 : 0.5,
+                            agreeableness: 0.6,
+                            neuroticism: 0.3,
+                            interpretation: type === 'analytical' ? ["analytical", "organized", "reserved"] : ["balanced", "adaptive", "cooperative"]
                         },
-                        reasoning_system: {
-                            default_style: template.reasoning,
-                            decision_frameworks: ["pattern_recognition", "hypothesis_testing"]
+                        moral_architecture: {
+                            foundations: {
+                                care_harm: 0.7,
+                                fairness_cheating: 0.8,
+                                loyalty_betrayal: 0.6,
+                                authority_subversion: 0.5,
+                                sanctity_degradation: 0.4
+                            },
+                            primary_moral_concern: "fairness_cheating"
                         },
-                        emotional_system: {
-                            base_mood: template.mood,
-                            triggers: {},
-                            recovery_patterns: ["analysis", "creative_expression"]
-                        },
-                        moral_framework: {
-                            principles: [
-                                { name: "Truth Seeking", strength: 0.8 },
-                                { name: "Innovation", strength: 0.7 }
-                            ]
+                        cognitive_architecture: {
+                            thinking_style: type === 'analytical' ? "analytical" : "balanced",
+                            decision_making: "analytical"
                         }
                     },
-                    desktop_compatibility: {
-                        supported_platforms: ["windows", "macos", "linux"],
-                        local_processing: true,
-                        offline_capable: true,
-                        gpu_acceleration: true
+                    engine_parameters: {
+                        personality_vector: {
+                            dimensions: 50,
+                            vector: Array(50).fill(0).map((_, i) => 0.5 + (Math.sin(i * 0.3) * 0.2))
+                        },
+                        learning_parameters: {
+                            learning_rate: 0.15
+                        }
+                    },
+                    neural_configuration: {
+                        nodes: 120,
+                        connections: 360
                     }
                 };
 
-                this.addProfile(templateProfile);
-                this.showScreen('library-screen');
+                return baseProfile;
             }
 
             createDemoProfile(type) {
                 const demos = {
-                    balanced: {
-                        name: "Balanced Analyst",
-                        reasoning: "balanced_analysis",
-                        principles: ["Truth", "Fairness", "Growth"]
+                    scientific_balanced: {
+                        name: "Balanced Scientific Profile",
+                        format: "scientific",
+                        data: this.createScientificTemplate('balanced')
                     },
-                    empathetic: {
-                        name: "Empathic Listener", 
-                        reasoning: "empathetic_care",
-                        principles: ["Compassion", "Understanding", "Support"]
-                    },
-                    strategic: {
-                        name: "Strategic Planner",
-                        reasoning: "principled_directness", 
-                        principles: ["Efficiency", "Planning", "Execution"]
-                    }
-                };
-
-                const demo = demos[type] || demos.balanced;
-
-                const demoProfile = {
-                    neura_spec_version: "1.0",
-                    metadata: {
-                        name: demo.name,
-                        creator: "demo",
-                        created_date: new Date().toISOString(),
-                        profile_type: "demo",
-                        questions_answered: 0
-                    },
-                    brain_architecture: {
-                        neural_network: {
-                            nodes: 25,
-                            connections: 80
-                        },
-                        reasoning_system: {
-                            default_style: demo.reasoning,
-                            decision_frameworks: ["experience_based", "principle_driven"]
-                        },
-                        emotional_system: {
-                            base_mood: "balanced_calm",
-                            triggers: {},
-                            recovery_patterns: ["reflection", "adaptation"]
-                        },
-                        moral_framework: {
-                            principles: demo.principles.map((name, i) => ({
-                                name: name,
-                                strength: 0.7 + (i * 0.1)
-                            }))
+                    legacy_empathetic: {
+                        name: "Empathic Legacy Profile", 
+                        format: "legacy",
+                        data: {
+                            neura_spec_version: "1.0",
+                            metadata: {
+                                name: "Empathic Listener",
+                                creator: "demo",
+                                created_date: new Date().toISOString(),
+                                profile_type: "demo",
+                                questions_answered: 0
+                            },
+                            brain_architecture: {
+                                neural_network: {
+                                    nodes: 25,
+                                    connections: 80
+                                },
+                                reasoning_system: {
+                                    default_style: "empathetic_care",
+                                    decision_frameworks: ["emotion_informed", "relationship_focused"]
+                                },
+                                emotional_system: {
+                                    base_mood: "compassionate_calm",
+                                    triggers: {},
+                                    recovery_patterns: ["reflection", "connection"]
+                                },
+                                moral_framework: {
+                                    principles: ["Compassion", "Understanding", "Support"].map((name, i) => ({
+                                        name: name,
+                                        strength: 0.7 + (i * 0.1)
+                                    }))
+                                }
+                            }
                         }
                     },
-                    desktop_compatibility: {
-                        supported_platforms: ["windows", "macos", "linux"],
-                        local_processing: true,
-                        offline_capable: true,
-                        gpu_acceleration: true
+                    scientific_analytical: {
+                        name: "Analytical Scientific Profile",
+                        format: "scientific",
+                        data: this.createScientificTemplate('analytical')
                     }
                 };
 
-                this.addProfile(demoProfile);
+                const demo = demos[type] || demos.scientific_balanced;
+                this.addProfile(demo.data, demo.name);
                 this.showScreen('library-screen');
             }
 
@@ -1226,7 +1664,14 @@
                     this.exportProfile(profileId);
                     
                     // Show instructions for desktop app
-                    this.showSuccess(`"${profile.name}" exported!\n\nTo run this profile locally:\n\n1. Download Neura Desktop App from download.html\n2. Install on your computer (Windows, macOS, or Linux)\n3. Import the .neura file\n4. Run AI 100% locally with no internet needed!`);
+                    let formatInfo = '';
+                    if (profile.format === 'scientific') {
+                        formatInfo = '\n\nThis scientific profile includes:\n• 50-dimensional personality vector\n• Validated psychological parameters\n• Engine-ready configuration';
+                    } else if (profile.format === 'legacy') {
+                        formatInfo = '\n\nThis legacy profile includes:\n• Narrative-based personality model\n• Experience-driven reasoning\n• Moral framework';
+                    }
+                    
+                    this.showSuccess(`"${profile.name}" exported!${formatInfo}\n\nTo run this profile locally:\n\n1. Download Neura Desktop App\n2. Install on your computer\n3. Import the .neura file\n4. Run AI 100% locally with no internet needed!`);
                     
                     // Open download page after a delay
                     setTimeout(() => {
@@ -1250,11 +1695,18 @@
                 setTimeout(() => element.classList.remove('show'), 5000);
             }
 
+            showCompatibilityWarning(message) {
+                const element = document.getElementById('compatibility-warning');
+                element.textContent = message;
+                element.classList.add('show');
+                setTimeout(() => element.classList.remove('show'), 10000);
+            }
+
             // === INITIALIZATION ===
             initialize() {
                 this.setupEventListeners();
                 this.renderLibrary();
-                console.log('✅ Neura Library ready');
+                console.log('✅ Enhanced Neura Library ready with format support');
             }
 
             setupEventListeners() {
@@ -1295,6 +1747,24 @@
                         this.showError('Please drop a valid .neura or .json file');
                     }
                 });
+
+                // Listen for profile creations from profiler
+                window.addEventListener('storage', (e) => {
+                    if (e.key && e.key.startsWith('user_') && e.key.endsWith('_neura_library')) {
+                        this.profiles = this.loadProfiles();
+                        this.renderLibrary();
+                    }
+                });
+
+                // Listen for messages from profiler windows
+                window.addEventListener('message', (e) => {
+                    if (e.data && e.data.type === 'NEURA_PROFILE_CREATED') {
+                        this.profiles = this.loadProfiles();
+                        this.renderLibrary();
+                        this.showScreen('library-screen');
+                        this.showSuccess('New Neura profile created and added to your library!');
+                    }
+                });
             }
         }
 
@@ -1304,14 +1774,6 @@
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', () => {
             window.app.initialize();
-        });
-
-        // Listen for profile creations from other pages
-        window.addEventListener('storage', (e) => {
-            if (e.key && e.key.startsWith('user_') && e.key.endsWith('_neura_library')) {
-                window.app.profiles = window.app.loadProfiles();
-                window.app.renderLibrary();
-            }
         });
     </script>
 </body>
